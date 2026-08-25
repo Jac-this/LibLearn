@@ -1,6 +1,5 @@
 import "./App.css";
 import Courses from "./Courses";
-import Course from "./Course";
 
 function App() {
   const path = window.location.pathname;
@@ -9,15 +8,11 @@ function App() {
     return <Courses />;
   }
 
-  if (path === "/course") {
-    return <Course />;
-  }
-
   return (
     <div style={{ padding: "40px" }}>
-      <h1>Liberian Learning</h1>
+      <h1>LibLearn</h1>
 
-      <p>Welcome to Liberian Learning.</p>
+      <p>Welcome to LibLearn — a learning platform for Liberian students.</p>
 
       <a href="/courses">
         Go to Courses →
