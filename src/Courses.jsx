@@ -1,113 +1,114 @@
 import { useState } from "react";
 
+const courses = [
+  {
+    id: "digital-literacy",
+    title: "Digital Literacy",
+    category: "Technology",
+    level: "High School",
+    difficulty: "Beginner",
+    lessons: 12,
+    duration: "4 weeks",
+    icon: "💻",
+    description:
+      "Learn the essential digital skills you need to study, work, communicate, and navigate the modern world.",
+  },
+  {
+    id: "mathematics",
+    title: "Mathematics",
+    category: "Mathematics",
+    level: "High School",
+    difficulty: "Beginner",
+    lessons: 16,
+    duration: "6 weeks",
+    icon: "∑",
+    description:
+      "Build a strong foundation in numbers, algebra, geometry, statistics, and everyday problem solving.",
+  },
+  {
+    id: "biology",
+    title: "Biology",
+    category: "Science",
+    level: "High School",
+    difficulty: "Beginner",
+    lessons: 14,
+    duration: "5 weeks",
+    icon: "🧬",
+    description:
+      "Discover living organisms, cells, genetics, human biology, ecosystems, and the science of life.",
+  },
+];
+
+const levels = [
+  "All",
+  "High School",
+  "University",
+  "Professional",
+  "Skills",
+];
+
+const categories = [
+  "All",
+  "Mathematics",
+  "Science",
+  "Technology",
+  "Business",
+  "Health",
+  "Humanities",
+  "Social Sciences",
+  "Law",
+  "Arts & Design",
+  "Languages",
+  "Agriculture",
+  "Education",
+  "Career",
+  "Personal Development",
+];
+
 function Courses() {
+  const [activeLevel, setActiveLevel] = useState("All");
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
 
-  const categories = [
-    "All",
-    "School",
-    "Technology",
-    "Business",
-    "Agriculture",
-    "Creative",
-    "Career",
-  ];
-
-  const courses = [
-    {
-      title: "Artificial Intelligence for Beginners",
-      category: "Technology",
-      level: "Beginner",
-      learners: "1,247",
-      duration: "6 weeks",
-      icon: "AI",
-      featured: true,
-    },
-    {
-      title: "Mastering Mathematics",
-      category: "School",
-      level: "All levels",
-      learners: "2,184",
-      duration: "8 weeks",
-      icon: "∑",
-    },
-    {
-      title: "Build Your First Website",
-      category: "Technology",
-      level: "Beginner",
-      learners: "864",
-      duration: "5 weeks",
-      icon: "</>",
-    },
-    {
-      title: "English & Communication Skills",
-      category: "School",
-      level: "Beginner",
-      learners: "1,563",
-      duration: "6 weeks",
-      icon: "Aa",
-    },
-    {
-      title: "Start Your Small Business",
-      category: "Business",
-      level: "Beginner",
-      learners: "723",
-      duration: "4 weeks",
-      icon: "₵",
-    },
-    {
-      title: "Agriculture & Food Production",
-      category: "Agriculture",
-      level: "Beginner",
-      learners: "548",
-      duration: "7 weeks",
-      icon: "🌱",
-    },
-    {
-      title: "Creative Writing & Storytelling",
-      category: "Creative",
-      level: "All levels",
-      learners: "436",
-      duration: "4 weeks",
-      icon: "✍",
-    },
-    {
-      title: "Career & Workplace Skills",
-      category: "Career",
-      level: "Intermediate",
-      learners: "689",
-      duration: "5 weeks",
-      icon: "🚀",
-    },
-  ];
-
   const filteredCourses = courses.filter((course) => {
+    const levelMatch =
+      activeLevel === "All" || course.level === activeLevel;
+
     const categoryMatch =
       activeCategory === "All" ||
       course.category === activeCategory;
 
-    const searchMatch =
-      course.title.toLowerCase().includes(search.toLowerCase()) ||
-      course.category.toLowerCase().includes(search.toLowerCase());
+    const searchText = search.toLowerCase().trim();
 
-    return categoryMatch && searchMatch;
+    const searchMatch =
+      searchText === "" ||
+      course.title.toLowerCase().includes(searchText) ||
+      course.category.toLowerCase().includes(searchText) ||
+      course.description.toLowerCase().includes(searchText);
+
+    return levelMatch && categoryMatch && searchMatch;
   });
 
-  const openCourse = () => {
-    window.location.href = "/course";
+  const openCourse = (course) => {
+    window.location.href = `/course?course=${course.id}`;
+  };
+
+  const resetFilters = () => {
+    setActiveLevel("All");
+    setActiveCategory("All");
+    setSearch("");
   };
 
   return (
     <div className="courses-page">
 
+      {/* NAVIGATION */}
       <header className="courses-header">
-
         <div className="courses-nav">
 
           <a href="/" className="logo">
             <span className="logo-mark">L</span>
-            <span>Liberian Learning</span>
+            <span>LibLearn</span>
           </a>
 
           <nav>
@@ -126,52 +127,52 @@ function Courses() {
             </a>
           </nav>
 
-          <button className="login-button">
+          <a className="login-button" href="/login">
             Log In
-          </button>
+          </a>
 
         </div>
-
       </header>
 
 
       {/* HERO */}
-
       <section className="courses-hero">
 
-        <div>
+        <div className="courses-hero-text">
 
           <p className="eyebrow">
-            LEARN SOMETHING NEW
+            THE LIBLEARN COURSE LIBRARY
           </p>
 
           <h1>
-            Explore.
+            Learn.
             <br />
-            <span>Learn.</span>
+            <span>Grow.</span>
             <br />
-            Grow.
+            Become.
           </h1>
 
           <p>
-            Discover courses designed to help Liberian learners
-            build knowledge, develop practical skills, and
-            prepare for the future.
+            Explore courses designed to help you build
+            knowledge, develop practical skills, and prepare
+            for the future.
           </p>
 
         </div>
 
         <div className="courses-hero-card">
 
-          <span>🇱🇷</span>
+          <span className="hero-symbol">
+            ✦
+          </span>
 
           <strong>
-            Learning has no limits.
+            Knowledge opens doors.
           </strong>
 
           <small>
-            From Monrovia to Grand Kru, knowledge should be
-            accessible everywhere.
+            Learn at your own pace. Build your future one
+            lesson at a time.
           </small>
 
         </div>
@@ -180,7 +181,6 @@ function Courses() {
 
 
       {/* SEARCH */}
-
       <section className="course-explorer">
 
         <div className="course-search">
@@ -194,28 +194,76 @@ function Courses() {
             onChange={(e) => setSearch(e.target.value)}
           />
 
+          {search && (
+            <button
+              className="clear-search"
+              onClick={() => setSearch("")}
+            >
+              ×
+            </button>
+          )}
+
         </div>
 
 
-        <div className="course-categories">
+        {/* LEVEL */}
+        <div className="filter-section">
 
-          {categories.map((category) => (
+          <p className="filter-label">
+            LEARNING LEVEL
+          </p>
 
-            <button
-              key={category}
-              className={
-                activeCategory === category
-                  ? "category-filter active"
-                  : "category-filter"
-              }
-              onClick={() =>
-                setActiveCategory(category)
-              }
-            >
-              {category}
-            </button>
+          <div className="course-categories">
 
-          ))}
+            {levels.map((level) => (
+
+              <button
+                key={level}
+                className={
+                  activeLevel === level
+                    ? "category-filter active"
+                    : "category-filter"
+                }
+                onClick={() => setActiveLevel(level)}
+              >
+                {level}
+              </button>
+
+            ))}
+
+          </div>
+
+        </div>
+
+
+        {/* CATEGORY */}
+        <div className="filter-section">
+
+          <p className="filter-label">
+            SUBJECT AREA
+          </p>
+
+          <div className="course-categories">
+
+            {categories.map((category) => (
+
+              <button
+                key={category}
+                className={
+                  activeCategory === category
+                    ? "category-filter active"
+                    : "category-filter"
+                }
+                onClick={() =>
+                  setActiveCategory(category)
+                }
+              >
+                {category}
+              </button>
+
+            ))}
+
+          </div>
 
         </div>
 
@@ -223,74 +271,77 @@ function Courses() {
 
 
       {/* FEATURED COURSE */}
+      {activeLevel === "All" &&
+        activeCategory === "All" &&
+        search === "" && (
 
-      {activeCategory === "All" && search === "" && (
+          <section className="featured-course">
 
-        <section className="featured-course">
+            <div className="featured-content">
 
-          <div className="featured-content">
+              <p className="eyebrow">
+                START HERE
+              </p>
 
-            <p className="eyebrow">
-              FEATURED COURSE
-            </p>
+              <h2>
+                Digital Literacy
+                <br />
+                <span>for the modern world.</span>
+              </h2>
 
-            <h2>
-              Artificial Intelligence
-              <br />
-              <span>for Beginners.</span>
-            </h2>
+              <p>
+                Learn the essential digital skills needed
+                for school, work, communication, and everyday
+                life.
+              </p>
 
-            <p>
-              Understand what AI is, how it works, and how young
-              Liberians can use it to learn, create, solve
-              problems, and build opportunities.
-            </p>
+              <div className="featured-meta">
 
-            <div className="featured-meta">
+                <span>● Beginner friendly</span>
 
-              <span>● Beginner friendly</span>
-              <span>● 6 weeks</span>
-              <span>● 1,247 learners</span>
+                <span>● 4 weeks</span>
+
+                <span>● 12 lessons</span>
+
+              </div>
+
+              <button
+                className="primary-button"
+                onClick={() =>
+                  openCourse(courses[0])
+                }
+              >
+                Start Course →
+              </button>
 
             </div>
 
-            <button
-              className="primary-button"
-              onClick={openCourse}
-            >
-              Start Course →
-            </button>
 
-          </div>
+            <div className="featured-visual">
 
+              <div className="ai-circle">
+                💻
+              </div>
 
-          <div className="featured-visual">
+              <div className="floating-card card-one">
+                ✦ Learn
+              </div>
 
-            <div className="ai-circle">
-              AI
+              <div className="floating-card card-two">
+                +320 XP
+              </div>
+
+              <div className="floating-card card-three">
+                LibLearn
+              </div>
+
             </div>
 
-            <div className="floating-card card-one">
-              ✦ Learn
-            </div>
-
-            <div className="floating-card card-two">
-              +320 XP
-            </div>
-
-            <div className="floating-card card-three">
-              🇱🇷 Liberia
-            </div>
-
-          </div>
-
-        </section>
-
-      )}
+          </section>
+        )}
 
 
       {/* COURSE LIBRARY */}
-
       <section className="all-courses">
 
         <div className="courses-title">
@@ -302,15 +353,22 @@ function Courses() {
             </p>
 
             <h2>
-              {activeCategory === "All"
-                ? "Learn what matters."
-                : `${activeCategory} courses.`}
+              {search
+                ? "Search results."
+                : activeLevel !== "All"
+                ? `${activeLevel} courses.`
+                : activeCategory !== "All"
+                ? `${activeCategory} courses.`
+                : "Start learning."}
             </h2>
 
           </div>
 
           <span>
-            {filteredCourses.length} courses
+            {filteredCourses.length}{" "}
+            {filteredCourses.length === 1
+              ? "course"
+              : "courses"}
           </span>
 
         </div>
@@ -322,7 +380,7 @@ function Courses() {
 
             <article
               className="catalog-card"
-              key={course.title}
+              key={course.id}
             >
 
               <div className="catalog-cover">
@@ -334,12 +392,6 @@ function Courses() {
                 <span className="catalog-category">
                   {course.category}
                 </span>
-
-                {course.featured && (
-                  <span className="featured-tag">
-                    FEATURED
-                  </span>
-                )}
 
               </div>
 
@@ -355,7 +407,7 @@ function Courses() {
                   <span>•</span>
 
                   <span>
-                    {course.duration}
+                    {course.difficulty}
                   </span>
 
                 </div>
@@ -364,12 +416,26 @@ function Courses() {
                   {course.title}
                 </h3>
 
-                <p>
-                  {course.learners} learners
+                <p className="course-description">
+                  {course.description}
                 </p>
 
+                <div className="course-stats">
+
+                  <span>
+                    📚 {course.lessons} lessons
+                  </span>
+
+                  <span>
+                    ◷ {course.duration}
+                  </span>
+
+                </div>
+
                 <button
-                  onClick={openCourse}
+                  onClick={() =>
+                    openCourse(course)
+                  }
                 >
                   View Course →
                 </button>
@@ -383,6 +449,7 @@ function Courses() {
         </div>
 
 
+        {/* NO RESULTS */}
         {filteredCourses.length === 0 && (
 
           <div className="no-results">
@@ -390,12 +457,19 @@ function Courses() {
             <span>🔎</span>
 
             <h3>
-              We couldn't find that course.
+              No courses found.
             </h3>
 
             <p>
-              Try searching for another subject or skill.
+              Try another subject or learning level.
             </p>
+
+            <button
+              className="primary-button"
+              onClick={resetFilters}
+            >
+              View All Courses
+            </button>
 
           </div>
 
@@ -405,36 +479,35 @@ function Courses() {
 
 
       {/* CTA */}
-
       <section className="courses-cta">
 
         <p className="eyebrow">
-          NOT SURE WHERE TO START?
+          KEEP LEARNING
         </p>
 
         <h2>
-          Your next skill
+          Start with one course.
           <br />
-          <span>could change everything.</span>
+          <span>Build from there.</span>
         </h2>
 
         <p>
-          Start with something that interests you.
-          You can always explore more later.
+          LibLearn will continue growing with more
+          subjects, university courses, professional
+          training, and practical skills.
         </p>
 
         <button
           className="primary-button"
-          onClick={openCourse}
+          onClick={resetFilters}
         >
-          Start Learning Free →
+          Explore Courses →
         </button>
 
       </section>
 
 
       {/* FOOTER */}
-
       <footer className="courses-footer">
 
         <div>
@@ -446,7 +519,7 @@ function Courses() {
             </span>
 
             <span>
-              Liberian Learning
+              LibLearn
             </span>
 
           </a>
@@ -458,7 +531,7 @@ function Courses() {
         </div>
 
         <p>
-          © 2026 Liberian Learning
+          © 2026 LibLearn
         </p>
 
       </footer>
