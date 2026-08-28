@@ -103,15 +103,24 @@ function Courses() {
     <div className="courses-page">
 
       {/* NAVIGATION */}
-      <header className="courses-header">
+      <header className="navbar courses-header">
         <div className="courses-nav">
 
-          <a href="/" className="logo">
-            <span className="logo-mark">L</span>
-            <span>LibLearn</span>
+          <a href="/" className="brand">
+            <div className="brand-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div>
+              <h2>LibLearn</h2>
+              <p>Learn. Grow. Lead.</p>
+            </div>
           </a>
 
-          <nav>
+          <nav className="nav-links">
             <a href="/">Home</a>
 
             <a href="/courses" className="active">
@@ -127,7 +136,7 @@ function Courses() {
             </a>
           </nav>
 
-          <a className="login-button" href="/login">
+          <a className="login-btn" href="/login">
             Log In
           </a>
 
@@ -527,6 +536,11 @@ function Courses() {
           <p>
             Built for learners. Inspired by Liberia.
           </p>
+
+          <nav className="courses-footer-links">
+            <a href="/">Home</a>
+            <a href="/courses">Courses</a>
+          </nav>
 
         </div>
 
