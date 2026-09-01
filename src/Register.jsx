@@ -1,16 +1,17 @@
 import { useState } from "react";
-import { createAccount } from "./authStore.js";
+import { createAccount, validatePassword } from "./authStore.js";
 
 function Register() {
   const [form, setForm] = useState({ fullName: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const updateField = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
     setError("");
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const { fullName, email, password, confirmPassword } = form;
 
@@ -24,12 +25,20 @@ function Register() {
       return;
     }
 
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
+      return;
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
-    const result = createAccount({ fullName, email, password });
+    setLoading(true);
+    const result = await createAccount({ fullName, email, password });
+    setLoading(false);
     if (!result.ok) {
       setError(result.error);
       return;
@@ -53,10 +62,10 @@ function Register() {
           <label>Password<input name="password" type="password" value={form.password} onChange={updateField} autoComplete="new-password" /></label>
           <label>Confirm password<input name="confirmPassword" type="password" value={form.confirmPassword} onChange={updateField} autoComplete="new-password" /></label>
           {error && <p className="auth-error" role="alert">{error}</p>}
-          <button className="auth-submit" type="submit">Create account</button>
+          <button className="auth-submit" type="submit" disabled={loading}>{loading ? "Creating account..." : "Create account"}</button>
         </form>
         <p className="auth-switch">Already have an account? <a href="/login">Sign in</a></p>
-        <p className="auth-note">Prototype account storage uses this browser only.</p>
+        <p className="auth-note">Your password is handled securely by Supabase.</p>
       </section>
     </main>
   );

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { getBiologyLesson } from "./data/biologyLessons.js";
-
-const completedLessonsKey = "liblearn-biology-completed-lessons";
+import { useEffect, useState } from "react";
+import { getSession } from "./authStore.js";
+import { biologyCourse, getBiologyLesson } from "./data/biologyLessons.js";
+import { getCourseProgress, markLessonComplete } from "./progressStore.js";
 
 function getVariant(slide, index) {
   if (slide.layout) return slide.layout;
@@ -72,21 +72,71 @@ function Lesson() {
   const course = params.get("course") || "biology";
   const lessonNumber = Math.max(1, Number(params.get("lesson")) || 1);
   const lesson = course === "biology" ? getBiologyLesson(lessonNumber) : null;
+  const totalLessons = biologyCourse.lessons.length;
   const slides = lesson?.slides || [{ title: "Lesson Coming Soon", type: "concept", content: [{ heading: "Coming next", text: "This lesson is being prepared. More detailed learning material will be added to this course." }] }];
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [completedLessons, setCompletedLessons] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(completedLessonsKey) || "[]"); } catch { return []; }
-  });
+  const [studentId, setStudentId] = useState(null);
+  const [completedLessons, setCompletedLessons] = useState([]);
+  const [sessionLoading, setSessionLoading] = useState(true);
+  const [progressLoading, setProgressLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [progressError, setProgressError] = useState("");
+  const [saveMessage, setSaveMessage] = useState("");
+  const [saveWarning, setSaveWarning] = useState("");
+  useEffect(() => {
+    let active = true;
+    getSession().then((session) => {
+      if (!active) return;
+      const id = session?.id || null;
+      setStudentId(id);
+      setSessionLoading(false);
+      if (!id) {
+        setProgressLoading(false);
+        return;
+      }
+      getCourseProgress(course, totalLessons, id).then((progress) => {
+        if (!active) return;
+        if (progress.source === "error") setProgressError(progress.error);
+        else setCompletedLessons(progress.completedLessons);
+        setProgressLoading(false);
+      }).catch(() => {
+        if (!active) return;
+        setProgressError("Progress could not be loaded. Please refresh and try again.");
+        setProgressLoading(false);
+      });
+    }).catch(() => {
+      if (!active) return;
+      setSessionLoading(false);
+      setProgressLoading(false);
+      setProgressError("Your session could not be loaded. Please sign in again.");
+    });
+    return () => { active = false; };
+  }, [course, totalLessons]);
   const slide = slides[currentSlide];
   const variant = getVariant(slide, currentSlide);
   const isCompleted = completedLessons.includes(lessonNumber);
   const progress = Math.round(((currentSlide + 1) / slides.length) * 100);
-  const courseProgress = Math.round((completedLessons.length / 12) * 100);
+  const courseProgress = Math.round((completedLessons.length / totalLessons) * 100);
 
-  const completeLesson = () => {
-    const updated = completedLessons.includes(lessonNumber) ? completedLessons : [...completedLessons, lessonNumber].sort((a, b) => a - b);
-    setCompletedLessons(updated);
-    localStorage.setItem(completedLessonsKey, JSON.stringify(updated));
+  const completeLesson = async () => {
+    if (sessionLoading || progressLoading || saving || !studentId) return;
+    setSaving(true);
+    setProgressError("");
+    setSaveMessage("");
+    setSaveWarning("");
+    try {
+      const result = await markLessonComplete(course, lessonNumber, studentId);
+      if (result.ok) {
+        setCompletedLessons(result.completedLessons);
+        if (result.offline) setSaveMessage("Saved locally. It has not synced to Supabase.");
+        if (result.warning) setSaveWarning(result.warning);
+      } else {
+        setProgressError(result.error);
+      }
+    } catch {
+      setProgressError("Lesson progress could not be saved. Please try again.");
+    }
+    setSaving(false);
   };
 
   const nextLesson = () => { window.location.href = `/lesson?course=${course}&lesson=${lessonNumber + 1}`; };
@@ -96,11 +146,14 @@ function Lesson() {
     <div className="lesson-page">
       <header className="navbar"><div className="brand"><div className="brand-icon"><span></span><span></span><span></span><span></span><span></span></div><div><h2>LibLearn</h2><p>Learn. Grow. Lead.</p></div></div><nav className="nav-links"><a href="/">Home</a><a href="/courses">Courses</a><a href="/#learning-room">Learning Room</a><a href="/#community">Community</a></nav><div className="nav-actions"><button className="login-btn">Sign in</button><button className="join-btn">Join LibLearn</button></div></header>
       <main className="lesson-main">
-        <div className="lesson-top"><a href={`/course?course=${course}`} className="back-link">← Back to Course</a><span>LESSON {String(lessonNumber).padStart(2, "0")} OF 12</span></div>
+        <div className="lesson-top"><a href={`/course?course=${course}`} className="back-link">← Back to Course</a><span>LESSON {String(lessonNumber).padStart(2, "0")} OF {totalLessons}</span></div>
         <section className="lesson-heading"><div><span className="section-label">LIBLEARN BIOLOGY</span><h1>{lesson?.title || "Biology lesson"}</h1></div><div className="lesson-location"><strong>SLIDE {currentSlide + 1}</strong><span>of {slides.length}</span></div></section>
-        <div className="lesson-progress-area"><div className="lesson-progress-text"><span>Course progress</span><strong>{completedLessons.length}/12 lessons complete</strong></div><div className="lesson-progress-bar"><div style={{ width: `${courseProgress}%` }}></div></div><div className="lesson-progress-text"><span>{progress}% through this lesson</span><strong>{slides.length - currentSlide - 1} slides remaining</strong></div><div className="lesson-progress-bar"><div style={{ width: `${progress}%` }}></div></div></div>
+        <div className="lesson-progress-area"><div className="lesson-progress-text"><span>Course progress</span><strong>{completedLessons.length}/{totalLessons} lessons complete</strong></div><div className="lesson-progress-bar"><div style={{ width: `${courseProgress}%` }}></div></div><div className="lesson-progress-text"><span>{progress}% through this lesson</span><strong>{slides.length - currentSlide - 1} slides remaining</strong></div><div className="lesson-progress-bar"><div style={{ width: `${progress}%` }}></div></div></div>
+        {progressError && <p className="auth-error" role="alert">{progressError}</p>}
+        {saveMessage && <p className="auth-success" role="status">{saveMessage}</p>}
+        {saveWarning && <p className="auth-note" role="status">{saveWarning}</p>}
         <article className={`lesson-slide presentation-slide ${variant}`}><div className="lesson-slide-number">{String(currentSlide + 1).padStart(2, "0")}</div><div className="lesson-slide-content"><div className="slide-meta"><span>{variant.replace("-", " ").toUpperCase()}</span><span>LESSON {lessonNumber}</span></div><h2 className="presentation-title">{slide.title || "Lesson summary"}</h2><SlideContent slide={slide} variant={variant} /></div></article>
-        <div className="lesson-navigation"><button className="lesson-nav-button secondary" onClick={() => moveSlide(-1)} disabled={currentSlide === 0}>← Previous</button><span className="navigation-count">{currentSlide + 1} / {slides.length}</span>{currentSlide === slides.length - 1 ? <>{!isCompleted && <button className="lesson-nav-button primary" onClick={completeLesson}>Complete Lesson ✓</button>}{isCompleted && lessonNumber < 12 && <button className="lesson-nav-button primary" onClick={nextLesson}>Next Lesson →</button>}{isCompleted && lessonNumber === 12 && <a className="lesson-nav-button primary" href={`/course?course=${course}`}>Back to Course</a>}</> : <button className="lesson-nav-button primary" onClick={() => moveSlide(1)}>Next →</button>}</div>
+        <div className="lesson-navigation"><button className="lesson-nav-button secondary" onClick={() => moveSlide(-1)} disabled={currentSlide === 0}>← Previous</button><span className="navigation-count">{currentSlide + 1} / {slides.length}</span>{currentSlide === slides.length - 1 ? <>{!isCompleted && <button className="lesson-nav-button primary" onClick={completeLesson} disabled={sessionLoading || progressLoading || saving || !studentId}>{saving ? "Saving..." : progressLoading ? "Loading progress..." : "Complete Lesson ✓"}</button>}{isCompleted && lessonNumber < totalLessons && <button className="lesson-nav-button primary" onClick={nextLesson}>Next Lesson →</button>}{isCompleted && lessonNumber === totalLessons && <a className="lesson-nav-button primary" href={`/course?course=${course}`}>Back to Course</a>}</> : <button className="lesson-nav-button primary" onClick={() => moveSlide(1)}>Next →</button>}</div>
       </main>
     </div>
   );

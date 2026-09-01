@@ -1,61 +1,97 @@
-const accountsKey = "liblearn-accounts";
-const sessionKey = "liblearn-session";
+import { hasSupabaseConfig, supabase } from "./lib/supabase.js";
 
-function readAccounts() {
-  try {
-    const accounts = JSON.parse(localStorage.getItem(accountsKey) || "[]");
-    return Array.isArray(accounts) ? accounts : [];
-  } catch {
-    return [];
+const legacyAccountsKey = "liblearn-accounts";
+export const minimumPasswordLength = 6;
+
+export function validatePassword(password) {
+  if (password.length < minimumPasswordLength) {
+    return `Password must be at least ${minimumPasswordLength} characters.`;
   }
+  return "";
 }
 
-export function createAccount({ fullName, email, password }) {
-  const normalizedEmail = email.trim().toLowerCase();
-  const accounts = readAccounts();
+function unavailable() {
+  return { ok: false, error: "Supabase is not configured. Add VITE_SUPABASE_PUBLISHABLE_KEY to .env.local." };
+}
 
-  if (accounts.some((account) => account.email === normalizedEmail)) {
-    return { ok: false, error: "An account with this email already exists." };
-  }
-
-  const account = {
-    id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-    fullName: fullName.trim(),
-    email: normalizedEmail,
+export async function createAccount({ fullName, email, password }) {
+  if (!hasSupabaseConfig) return unavailable();
+  const { data, error } = await supabase.auth.signUp({
+    email: email.trim().toLowerCase(),
     password,
-  };
-
-  localStorage.setItem(accountsKey, JSON.stringify([...accounts, account]));
-  return { ok: true, account };
+    options: { data: { full_name: fullName.trim() } },
+  });
+  if (error) return { ok: false, error: error.message };
+  return { ok: true, user: data.user, session: data.session };
 }
 
-export function signIn(email, password) {
-  const normalizedEmail = email.trim().toLowerCase();
-  const account = readAccounts().find(
-    (storedAccount) => storedAccount.email === normalizedEmail && storedAccount.password === password,
-  );
-
-  if (!account) {
-    return { ok: false, error: "Incorrect email or password." };
+export async function signIn(email, password) {
+  if (!hasSupabaseConfig) return unavailable();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: email.trim().toLowerCase(),
+    password,
+  });
+  if (error) {
+    if (error.message.toLowerCase().includes("email not confirmed")) {
+      return { ok: false, unverified: true, error: "Please verify your email before signing in." };
+    }
+    return { ok: false, error: error.message };
   }
-
-  const session = {
-    id: account.id,
-    fullName: account.fullName,
-    email: account.email,
-  };
-  localStorage.setItem(sessionKey, JSON.stringify(session));
-  return { ok: true, session };
+  return { ok: true, user: data.user, session: data.session };
 }
 
-export function getSession() {
+export async function resendVerification(email) {
+  if (!hasSupabaseConfig) return unavailable();
+  const { error } = await supabase.auth.resend({ type: "signup", email: email.trim().toLowerCase() });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function sendPasswordReset(email) {
+  if (!hasSupabaseConfig) return unavailable();
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function updatePassword(password) {
+  if (!hasSupabaseConfig) return unavailable();
+  const { error } = await supabase.auth.updateUser({ password });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function getSession() {
+  if (!hasSupabaseConfig) return null;
+  const { data } = await supabase.auth.getSession();
+  return mapSession(data.session);
+}
+
+export function mapSession(session) {
+  if (!session?.user) return null;
+  return {
+    id: session.user.id,
+    email: session.user.email || "",
+    fullName: session.user.user_metadata?.full_name || session.user.email || "Student",
+  };
+}
+
+export async function getUser() {
+  if (!hasSupabaseConfig) return null;
+  const { data } = await supabase.auth.getUser();
+  return data.user;
+}
+
+export async function signOut() {
+  if (!hasSupabaseConfig) return unavailable();
+  const { error } = await supabase.auth.signOut();
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export function getLegacyAccountByEmail(email) {
   try {
-    return JSON.parse(localStorage.getItem(sessionKey) || "null");
+    const accounts = JSON.parse(localStorage.getItem(legacyAccountsKey) || "[]");
+    return accounts.find((account) => account.email === email.trim().toLowerCase()) || null;
   } catch {
     return null;
   }
-}
-
-export function signOut() {
-  localStorage.removeItem(sessionKey);
 }

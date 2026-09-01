@@ -79,7 +79,7 @@ function CourseDetails() {
               <h1>Introduction to Biology</h1>
               <p className="biology-hero-description">Discover the science of life, from cells and genetics to human systems, ecosystems, evolution, and the living world around us.</p>
               <div className="biology-course-meta">
-                <span><strong>12</strong> Lessons</span>
+                <span><strong>{lessons.length}</strong> Lessons</span>
                 <span><strong>Beginner</strong> Level</span>
                 <span><strong>Certificate</strong> of Completion</span>
               </div>
@@ -94,7 +94,7 @@ function CourseDetails() {
           </section>
 
           <section className="biology-outline-section">
-            <div className="biology-section-heading outline-heading"><div><span>YOUR LEARNING PATH</span><h2>Course outline</h2><p>Move through the foundations of Biology one lesson at a time.</p></div><strong>12 lessons</strong></div>
+            <div className="biology-section-heading outline-heading"><div><span>YOUR LEARNING PATH</span><h2>Course outline</h2><p>Move through the foundations of Biology one lesson at a time.</p></div><strong>{lessons.length} lessons</strong></div>
             <div className="biology-outline-list">{lessons.map((lesson, index) => <div className="biology-outline-item" key={lesson}><span className="biology-outline-number">{String(index + 1).padStart(2, "0")}</span><span className="biology-outline-title"><small>LESSON {index + 1}</small>{lesson}</span><span className="biology-outline-arrow">→</span></div>)}</div>
           </section>
 

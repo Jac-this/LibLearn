@@ -31,7 +31,7 @@ const courses = [
     category: "Science",
     level: "High School",
     difficulty: "Beginner",
-    lessons: 14,
+    lessons: 12,
     duration: "5 weeks",
     icon: "🧬",
     description:

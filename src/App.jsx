@@ -1,12 +1,54 @@
+import { useEffect, useState } from "react";
 import "./App.css";
 import Courses from "./Courses.jsx";
 import CourseDetails from "./CourseDetails.jsx";
 import Lesson from "./Lesson.jsx";
 import Login from "./Login.jsx";
 import Register from "./Register.jsx";
+import Dashboard from "./Dashboard.jsx";
+import Profile from "./Profile.jsx";
+import PasswordReset from "./PasswordReset.jsx";
+import { getSession, mapSession } from "./authStore.js";
+import { supabase } from "./lib/supabase.js";
+
+function ProtectedRoute({ children, session }) {
+  useEffect(() => {
+    if (session === null) window.location.href = "/login";
+  }, [session]);
+
+  if (session === undefined) return <main className="auth-page"><p>Loading...</p></main>;
+  if (!session) return null;
+  return children(session);
+}
 
 function App() {
+  const [session, setSession] = useState(undefined);
   const path = window.location.pathname;
+
+  useEffect(() => {
+    let mounted = true;
+    let authEventReceived = false;
+    let authListener;
+
+    if (supabase) {
+      const { data } = supabase.auth.onAuthStateChange((_event, currentSession) => {
+        authEventReceived = true;
+        if (mounted) setSession(mapSession(currentSession));
+      });
+      authListener = data;
+    }
+
+    getSession().then((currentSession) => {
+      if (mounted && !authEventReceived) setSession(currentSession);
+    }).catch(() => {
+      if (mounted && !authEventReceived) setSession(null);
+    });
+
+    return () => {
+      mounted = false;
+      authListener?.subscription.unsubscribe();
+    };
+  }, []);
 
   if (path === "/courses") {
     return <Courses />;
@@ -26,6 +68,22 @@ function App() {
 
   if (path === "/register") {
     return <Register />;
+  }
+
+  if (path === "/dashboard") {
+    return <ProtectedRoute session={session}>{(currentSession) => <Dashboard session={currentSession} />}</ProtectedRoute>;
+  }
+
+  if (path === "/profile") {
+    return <ProtectedRoute session={session}>{(currentSession) => <Profile session={currentSession} />}</ProtectedRoute>;
+  }
+
+  if (path === "/forgot-password") {
+    return <PasswordReset />;
+  }
+
+  if (path === "/reset-password") {
+    return <PasswordReset update session={session} />;
   }
   // the rest of your homepage code...
   // Homepage
