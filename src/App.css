@@ -49,6 +49,60 @@ a {
   overflow: hidden;
 }
 
+.audience-section {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 70px 30px;
+}
+
+.audience-heading {
+  max-width: 650px;
+}
+
+.audience-heading h2 {
+  margin: 10px 0 8px;
+  color: var(--blue-deep);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(25px, 3vw, 38px);
+  letter-spacing: -1.2px;
+}
+
+.audience-heading p,
+.audience-grid p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 28px;
+}
+
+.audience-grid article {
+  min-height: 165px;
+  padding: 22px;
+  background: var(--blue-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.audience-grid article > span {
+  color: var(--gold);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.audience-grid h3 {
+  margin: 18px 0 7px;
+  color: var(--blue-deep);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 16px;
+}
+
 /* NAVBAR */
 
 .navbar {
@@ -242,6 +296,62 @@ a {
 .auth-form {
   display: grid;
   gap: 17px;
+}
+
+.role-selector {
+  padding: 0;
+  border: 0;
+}
+
+.role-selector legend {
+  margin-bottom: 10px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.role-options {
+  display: grid;
+  gap: 8px;
+}
+
+.role-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  cursor: pointer;
+}
+
+.role-option.selected {
+  border-color: var(--blue);
+  background: var(--blue-soft);
+}
+
+.role-option input {
+  margin-top: 3px;
+  accent-color: var(--blue);
+}
+
+.role-option span {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.role-option strong {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.role-option small,
+.field-optional {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
 }
 
 .auth-form label {
@@ -2986,6 +3096,98 @@ a {
   background: #f5f8fc;
 }
 
+.role-home-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  background: #f5f8fc;
+}
+
+.role-home-panel {
+  width: min(100%, 620px);
+  padding: 42px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.role-home-panel h1,
+.role-home-intro h1 {
+  margin: 10px 0 8px;
+  color: var(--blue-deep);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: clamp(28px, 4vw, 43px);
+  letter-spacing: -1.5px;
+}
+
+.role-home-panel > p,
+.role-home-intro p,
+.role-home-intro small,
+.role-placeholder-card p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.role-home-panel .role-options {
+  margin-top: 25px;
+}
+
+.role-dashboard-page .dashboard-header {
+  max-width: 1280px;
+}
+
+.role-home-main {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 54px 30px 80px;
+}
+
+.role-home-intro {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.role-home-intro h1 {
+  max-width: 720px;
+}
+
+.role-home-intro small {
+  display: block;
+  margin-top: 12px;
+}
+
+.role-home-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-top: 36px;
+}
+
+.role-home-grid.secondary {
+  margin-top: 14px;
+}
+
+.role-placeholder-card {
+  min-height: 170px;
+  padding: 21px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.role-placeholder-card h2 {
+  margin: 12px 0 8px;
+  color: var(--blue-deep);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 17px;
+}
+
 .dashboard-header {
   max-width: 1280px;
 }
@@ -3432,6 +3634,17 @@ a {
   line-height: 1.5;
 }
 
+.dashboard-feature-strip {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 19px;
+}
+
+.dashboard-feature-strip .role-placeholder-card {
+  min-height: 135px;
+}
+
 .profile-page {
   min-height: 100vh;
   display: flex;
@@ -3521,6 +3734,16 @@ a {
 }
 
 @media (max-width: 600px) {
+  .audience-section {
+    padding: 50px 20px;
+  }
+
+  .audience-grid,
+  .role-home-grid,
+  .dashboard-feature-strip {
+    grid-template-columns: 1fr;
+  }
+
   .dashboard-header {
     height: auto;
     padding: 20px;
@@ -3582,5 +3805,18 @@ a {
 
   .profile-panel {
     padding: 30px 22px;
+  }
+
+  .role-home-panel {
+    padding: 30px 22px;
+  }
+
+  .role-home-main {
+    padding: 35px 20px 55px;
+  }
+
+  .role-home-intro {
+    align-items: start;
+    flex-direction: column;
   }
 }

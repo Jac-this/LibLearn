@@ -118,8 +118,7 @@ function App() {
         </nav>
 
         <div className="nav-actions">
-          <a className="login-btn" href="/login">Sign in</a>
-          <a className="join-btn" href="/register">Join LibLearn</a>
+          {session ? <a className="join-btn" href="/dashboard">Dashboard</a> : <><a className="login-btn" href="/login">Sign in</a><a className="join-btn" href="/register">Join LibLearn</a></>}
         </div>
 
       </header>
@@ -222,6 +221,11 @@ function App() {
 
           </div>
 
+        </section>
+
+        <section className="audience-section" aria-label="Who LibLearn is for">
+          <div className="audience-heading"><span className="section-label">ONE LEARNING COMMUNITY</span><h2>Built for the people who learn and teach.</h2><p>LibLearn brings together learners, university communities, and teachers in one welcoming place.</p></div>
+          <div className="audience-grid"><article><span>01</span><h3>High-School Students</h3><p>Support for Grade 1–12 learning, lessons, subjects, and steady progress.</p></article><article><span>02</span><h3>University Students</h3><p>Academic courses, resources, collaboration, and tools for university life.</p></article><article><span>03</span><h3>Teachers</h3><p>Teaching spaces, classrooms, resources, and support for every learner.</p></article></div>
         </section>
 
 

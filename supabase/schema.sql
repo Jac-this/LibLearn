@@ -9,9 +9,34 @@ create table if not exists public.profiles (
   subjects text not null default '',
   university_year text not null default '',
   course_program text not null default '',
+  role text,
+  institution text not null default '',
+  faculty text not null default '',
+  department text not null default '',
+  teaching_level text not null default '',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles add column if not exists role text;
+alter table public.profiles add column if not exists institution text not null default '';
+alter table public.profiles add column if not exists faculty text not null default '';
+alter table public.profiles add column if not exists department text not null default '';
+alter table public.profiles add column if not exists teaching_level text not null default '';
+
+do $$
+begin
+  if not exists (
+    select 1 from pg_constraint
+    where conname = 'profiles_role_check'
+      and conrelid = 'public.profiles'::regclass
+  ) then
+    alter table public.profiles
+      add constraint profiles_role_check
+      check (role is null or role in ('high_school_student', 'university_student', 'teacher'));
+  end if;
+end;
+$$;
 
 alter table public.profiles enable row level security;
 
@@ -75,8 +100,25 @@ language plpgsql
 security definer set search_path = public
 as $$
 begin
-  insert into public.profiles (id, full_name)
-  values (new.id, coalesce(new.raw_user_meta_data ->> 'full_name', ''));
+  insert into public.profiles (id, full_name, role, institution, faculty, department, teaching_level, class_grade, education_level, subjects, university_year, course_program)
+  values (
+    new.id,
+    coalesce(new.raw_user_meta_data ->> 'full_name', ''),
+    case
+      when new.raw_user_meta_data ->> 'role' in ('high_school_student', 'university_student', 'teacher')
+        then new.raw_user_meta_data ->> 'role'
+      else null
+    end,
+    coalesce(new.raw_user_meta_data ->> 'institution', ''),
+    coalesce(new.raw_user_meta_data ->> 'faculty', ''),
+    coalesce(new.raw_user_meta_data ->> 'department', ''),
+    coalesce(new.raw_user_meta_data ->> 'teaching_level', ''),
+    coalesce(new.raw_user_meta_data ->> 'class_grade', ''),
+    coalesce(new.raw_user_meta_data ->> 'education_level', ''),
+    coalesce(new.raw_user_meta_data ->> 'subjects', ''),
+    coalesce(new.raw_user_meta_data ->> 'university_year', ''),
+    coalesce(new.raw_user_meta_data ->> 'course_program', '')
+  );
   return new;
 end;
 $$;

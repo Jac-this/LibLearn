@@ -2,6 +2,11 @@ import { hasSupabaseConfig, supabase } from "./lib/supabase.js";
 
 const legacyAccountsKey = "liblearn-accounts";
 export const minimumPasswordLength = 6;
+export const roles = {
+  highSchoolStudent: "high_school_student",
+  universityStudent: "university_student",
+  teacher: "teacher",
+};
 
 export function validatePassword(password) {
   if (password.length < minimumPasswordLength) {
@@ -14,12 +19,26 @@ function unavailable() {
   return { ok: false, error: "Supabase is not configured. Add VITE_SUPABASE_PUBLISHABLE_KEY to .env.local." };
 }
 
-export async function createAccount({ fullName, email, password }) {
+export async function createAccount({ fullName, email, password, role, institution, faculty, department, teachingLevel, classGrade, subjects, universityYear, courseProgram }) {
   if (!hasSupabaseConfig) return unavailable();
   const { data, error } = await supabase.auth.signUp({
     email: email.trim().toLowerCase(),
     password,
-    options: { data: { full_name: fullName.trim() } },
+    options: {
+      data: {
+        full_name: fullName.trim(),
+        role,
+        institution: institution?.trim() || "",
+        faculty: faculty?.trim() || "",
+        department: department?.trim() || "",
+        teaching_level: teachingLevel?.trim() || "",
+        class_grade: classGrade?.trim() || "",
+        education_level: role === roles.highSchoolStudent ? "High School" : role === roles.universityStudent ? "University" : "Other",
+        subjects: subjects?.trim() || "",
+        university_year: universityYear?.trim() || "",
+        course_program: courseProgram?.trim() || "",
+      },
+    },
   });
   if (error) return { ok: false, error: error.message };
   return { ok: true, user: data.user, session: data.session };

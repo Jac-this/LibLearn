@@ -1,12 +1,68 @@
 import { useEffect, useState } from "react";
-import { signOut } from "./authStore.js";
+import { roles, signOut } from "./authStore.js";
 import { biologyCourse } from "./data/biologyLessons.js";
 import { getCourseProgress } from "./progressStore.js";
-import { getProfile, getProfileCompletion } from "./profileStore.js";
+import { getProfile, getProfileCompletion, saveProfile } from "./profileStore.js";
+
+const roleLabels = {
+  [roles.highSchoolStudent]: "High-School Student",
+  [roles.universityStudent]: "University Student",
+  [roles.teacher]: "Teacher",
+};
+
+function DashboardHeader({ label, onLogout, logoutError }) {
+  return <header className="navbar dashboard-header"><a href="/" className="brand"><div className="brand-icon"><span></span><span></span><span></span><span></span><span></span></div><div><h2>LibLearn</h2><p>Learn. Grow. Lead.</p></div></a><nav className="nav-links"><a href="/">Home</a><a href="/courses">Learn</a><a href="/dashboard" className="dashboard-active">{label}</a><a href="/profile">Profile</a></nav><button className="dashboard-logout" onClick={onLogout}>Log out</button>{logoutError && <p className="auth-error" role="alert">{logoutError}</p>}</header>;
+}
+
+function RoleSelection({ session, profile, onSelected }) {
+  const [selectedRole, setSelectedRole] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  const saveRole = async (event) => {
+    event.preventDefault();
+    if (!selectedRole) {
+      setError("Choose how you will use LibLearn.");
+      return;
+    }
+    setSaving(true);
+    setError("");
+    try {
+      const savedProfile = await saveProfile({ ...profile, role: selectedRole }, session.id);
+      if (!savedProfile) setError("Your role could not be saved. Please try again.");
+      else onSelected(savedProfile);
+    } catch {
+      setError("Your role could not be saved. Please try again.");
+    }
+    setSaving(false);
+  };
+
+  return <main className="role-home-page"><section className="role-home-panel"><span className="section-label">WELCOME TO LIBLEARN</span><h1>Welcome to the new LibLearn experience.</h1><p>Tell us how you use LibLearn so we can shape your Home around you.</p><form className="role-options" onSubmit={saveRole}>{Object.entries(roleLabels).map(([value, label]) => <label className={`role-option ${selectedRole === value ? "selected" : ""}`} key={value}><input type="radio" name="dashboardRole" value={value} checked={selectedRole === value} onChange={(event) => setSelectedRole(event.target.value)} /><span><strong>{label}</strong><small>{value === roles.teacher ? "Teach, organise, and support learners." : value === roles.universityStudent ? "Study courses, modules, and academic goals." : "Learn by Grade, subject, and lesson."}</small></span></label>)}{error && <p className="auth-error" role="alert">{error}</p>}<button className="auth-submit" type="submit" disabled={saving}>{saving ? "Saving..." : "Continue to LibLearn"}</button></form></section></main>;
+}
+
+function PlaceholderCard({ title, text }) {
+  return <article className="role-placeholder-card"><span className="section-label">COMING SOON</span><h2>{title}</h2><p>{text}</p></article>;
+}
+
+function RoleHome({ session, profile, role, onLogout, logoutError }) {
+  const isTeacher = role === roles.teacher;
+  const title = isTeacher ? "Your teaching workspace" : "Your university learning space";
+  const description = isTeacher ? "A focused place to organise your teaching, classrooms, and learner support." : "A focused place to organise your courses, academic progress, and study life.";
+  const cards = isTeacher
+    ? [["My Classrooms", "Classroom management is being prepared."], ["My Students", "Student connections will appear here."], ["Create Lesson", "Lesson authoring tools are coming soon."], ["Student Progress", "Progress insights will be available here."]]
+    : [["My Courses", "Your university courses and modules will appear here."], ["Continue Learning", "Your next academic lesson will appear here."], ["Academic Progress", "Course and module progress is coming soon."], ["Academic Resources", "Saved academic resources will appear here."]];
+
+  const secondaryCards = isTeacher
+    ? [["My Courses", "Teaching courses and subjects will be organised here."], ["Create Assignment", "Assignment tools are coming soon."], ["Resources", "Teaching resources will be available here."], ["Announcements", "Class announcements are coming soon."], ["Study Groups", "Class collaboration is coming soon."], ["AI Teaching Assistant", "Teaching support tools are coming soon."], ["Notifications", "Teaching notifications are coming soon."]]
+    : [["Lecturers / Teachers", "Your lecturers and teachers will appear here."], ["Classrooms", "Your enrolled classrooms are coming soon."], ["Assignments", "Academic assignments are coming soon."], ["Study Groups", "Academic study groups are coming soon."], ["Study Reminders", "Personal study reminders are coming soon."], ["AI Tutor", "Your academic AI Tutor is coming soon."], ["Notifications", "Academic notifications are coming soon."]];
+
+  return <div className="dashboard-page role-dashboard-page"><DashboardHeader label={isTeacher ? "Teaching Home" : "University Home"} onLogout={onLogout} logoutError={logoutError} /><main className="role-home-main"><section className="role-home-intro"><div><span className="section-label">{isTeacher ? "TEACHING WORKSPACE" : "UNIVERSITY HOME"}</span><h1>{title}, {profile.fullName || session.fullName}.</h1><p>{description}</p><small>{profile.institution || "Complete your profile to add your institution."}</small></div><div className="dashboard-profile"><span>{session.fullName.charAt(0).toUpperCase()}</span><div><strong>{roleLabels[role]}</strong><small>{session.email}</small></div></div></section><section className="role-home-grid">{cards.map(([cardTitle, text]) => <PlaceholderCard title={cardTitle} text={text} key={cardTitle} />)}</section><section className="role-home-grid secondary">{secondaryCards.map(([cardTitle, text]) => <PlaceholderCard title={cardTitle} text={text} key={cardTitle} />)}</section></main></div>;
+}
 
 function Dashboard({ session }) {
-  const [profile, setProfile] = useState(() => getProfileCompletion({}) && { fullName: session.fullName });
+  const [profile, setProfile] = useState({ fullName: session.fullName, role: null, studentId: "", username: "", educationLevel: "", classGrade: "", subjects: "", institution: "", faculty: "", department: "", universityYear: "", teachingLevel: "" });
   const [profileError, setProfileError] = useState("");
+  const [profileLoading, setProfileLoading] = useState(true);
   const [logoutError, setLogoutError] = useState("");
   const [progress, setProgress] = useState(null);
   const [progressLoading, setProgressLoading] = useState(true);
@@ -17,12 +73,23 @@ function Dashboard({ session }) {
   const courseComplete = progress?.completedCount >= totalLessons;
 
   useEffect(() => {
-    if (session?.id) getProfile(session.id).then(setProfile).catch(() => setProfileError("Profile could not be loaded. Please try again later."));
-  }, [session?.id]);
+    let active = true;
+    if (!session?.id) {
+      return () => { active = false; };
+    }
+    getProfile(session.id).then((storedProfile) => {
+      if (active) setProfile((currentProfile) => ({ ...currentProfile, ...storedProfile, fullName: storedProfile.fullName || session.fullName }));
+    }).catch(() => {
+      if (active) setProfileError("Profile could not be loaded. Please try again later.");
+    }).finally(() => {
+      if (active) setProfileLoading(false);
+    });
+    return () => { active = false; };
+  }, [session?.id, session?.fullName]);
 
   useEffect(() => {
     let active = true;
-    if (!session?.id) return () => { active = false; };
+    if (!session?.id || profile.role !== roles.highSchoolStudent) return () => { active = false; };
     getCourseProgress("biology", totalLessons, session.id).then((result) => {
       if (!active) return;
       if (result.source === "error") setProgressError(result.error);
@@ -34,7 +101,17 @@ function Dashboard({ session }) {
       setProgressLoading(false);
     });
     return () => { active = false; };
-  }, [session?.id, totalLessons]);
+  }, [session?.id, profile.role, totalLessons]);
+
+  const handleLogout = async () => {
+    setLogoutError("");
+    const result = await signOut();
+    if (!result.ok) {
+      setLogoutError(result.error || "Could not sign out. Please try again.");
+      return;
+    }
+    window.location.href = "/login";
+  };
 
   const refreshProgress = () => {
     setProgressLoading(true);
@@ -53,30 +130,17 @@ function Dashboard({ session }) {
     return null;
   }
 
-  const handleLogout = async () => {
-    setLogoutError("");
-    const result = await signOut();
-    if (!result.ok) {
-      setLogoutError(result.error || "Could not sign out. Please try again.");
-      return;
-    }
-    window.location.href = "/login";
-  };
+  if (profileLoading) return <main className="auth-page"><p>Loading your LibLearn Home...</p></main>;
+  if (profileError) return <main className="auth-page"><p className="auth-error" role="alert">{profileError}</p></main>;
+  if (!roleLabels[profile.role]) return <RoleSelection session={session} profile={profile} onSelected={setProfile} />;
+  if (profile.role !== roles.highSchoolStudent) return <RoleHome session={session} profile={profile} role={profile.role} onLogout={handleLogout} logoutError={logoutError} />;
 
   const firstName = profile.fullName || session.fullName;
   const subjects = profile.subjects || "biology, science, and the world around you";
 
   return (
     <div className="dashboard-page">
-      <header className="navbar dashboard-header">
-        <a href="/" className="brand">
-          <div className="brand-icon"><span></span><span></span><span></span><span></span><span></span></div>
-          <div><h2>LibLearn</h2><p>Learn. Grow. Lead.</p></div>
-        </a>
-        <nav className="nav-links"><a href="/">Home</a><a href="/courses">Courses</a><a href="/dashboard" className="dashboard-active">Dashboard</a></nav>
-        <button className="dashboard-logout" onClick={handleLogout}>Log out</button>
-        {logoutError && <p className="auth-error" role="alert">{logoutError}</p>}
-      </header>
+      <DashboardHeader session={session} label="Student Home" onLogout={handleLogout} logoutError={logoutError} />
 
       <main className="dashboard-main">
         <section className="dashboard-welcome">
@@ -111,6 +175,9 @@ function Dashboard({ session }) {
 
             <div className="dashboard-section-heading"><div><span className="section-label">FOR YOU</span><h2>Recommended next</h2></div></div>
             <article className="dashboard-recommendation"><span>✦</span><div><small>BASED ON YOUR PROFILE</small><h3>Keep exploring {subjects.split(",")[0]}.</h3><p>Biology builds a strong foundation for health, agriculture, and environmental learning.</p></div><a href="/courses">Explore →</a></article>
+
+            <div className="dashboard-section-heading"><div><span className="section-label">YOUR LIBLEARN HOME</span><h2>More ways to learn</h2></div></div>
+            <section className="dashboard-feature-strip"><PlaceholderCard title="AI Tutor" text="Your learning assistant is coming soon." /><PlaceholderCard title="Teachers & Classrooms" text="Teacher connections and classrooms are coming soon." /><PlaceholderCard title="Study Groups & Friends" text="Learning connections are coming soon." /><PlaceholderCard title="Study Reminders" text="Personal study reminders are coming soon." /></section>
           </div>
 
           <aside className="dashboard-side-column">
