@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { roles } from "./authStore.js";
+import { roles, signOut } from "./authStore.js";
 import { getProfile, saveProfile } from "./profileStore.js";
 
 const roleLabels = {
@@ -14,6 +14,7 @@ function Profile({ session }) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [signOutError, setSignOutError] = useState("");
   const dirtyRef = useRef(false);
 
   useEffect(() => {
@@ -72,6 +73,20 @@ function Profile({ session }) {
     });
   };
 
+  const handleSignOut = async () => {
+    setSignOutError("");
+    try {
+      const result = await signOut();
+      if (!result.ok) {
+        setSignOutError(result.error || "Could not sign out. Please try again.");
+        return;
+      }
+      window.location.href = "/";
+    } catch {
+      setSignOutError("Could not sign out. Please try again.");
+    }
+  };
+
   return (
     <main className="profile-page">
       <section className="profile-panel">
@@ -91,7 +106,9 @@ function Profile({ session }) {
           {profile.role === roles.universityStudent && <><label>University / institution<input name="institution" value={profile.institution} onChange={updateField} /></label><label>Faculty / college <span className="field-optional">Optional</span><input name="faculty" value={profile.faculty} onChange={updateField} /></label><label>Department / program<input name="department" value={profile.department} onChange={updateField} /></label><label>Year / level<input name="universityYear" value={profile.universityYear} onChange={updateField} /></label></>}
           {profile.role === roles.teacher && <><label>Teaching institution<input name="institution" value={profile.institution} onChange={updateField} /></label><label>Teaching level<input name="teachingLevel" value={profile.teachingLevel} onChange={updateField} /></label><label>Subjects / courses taught<textarea name="subjects" value={profile.subjects} onChange={updateField} rows="3" /></label></>}
           {error && <p className="auth-error" role="alert">{error}</p>}{saved && <p className="auth-success" role="status">Profile saved.</p>}
+          {signOutError && <p className="auth-error" role="alert">{signOutError}</p>}
           <div className="profile-actions"><a href="/dashboard">Cancel</a><button className="auth-submit" type="submit" disabled={loading || saving}>{saving ? "Saving..." : "Save profile"}</button></div>
+          <button className="profile-sign-out" type="button" onClick={handleSignOut}>Sign Out</button>
         </form>
       </section>
     </main>

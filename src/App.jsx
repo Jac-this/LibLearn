@@ -118,7 +118,7 @@ function App() {
         </nav>
 
         <div className="nav-actions">
-          {session ? <a className="join-btn" href="/dashboard">Dashboard</a> : <><a className="login-btn" href="/login">Sign in</a><a className="join-btn" href="/register">Join LibLearn</a></>}
+          {session === undefined ? null : session ? <a className="join-btn" href="/dashboard">Dashboard</a> : <><a className="login-btn" href="/login">Sign in</a><a className="join-btn" href="/register">Join LibLearn</a></>}
         </div>
 
       </header>

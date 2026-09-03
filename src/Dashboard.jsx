@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { roles, signOut } from "./authStore.js";
+import { roles } from "./authStore.js";
 import { biologyCourse } from "./data/biologyLessons.js";
 import { getCourseProgress } from "./progressStore.js";
 import { getProfile, getProfileCompletion, saveProfile } from "./profileStore.js";
@@ -10,8 +10,8 @@ const roleLabels = {
   [roles.teacher]: "Teacher",
 };
 
-function DashboardHeader({ label, onLogout, logoutError }) {
-  return <header className="navbar dashboard-header"><a href="/" className="brand"><div className="brand-icon"><span></span><span></span><span></span><span></span><span></span></div><div><h2>LibLearn</h2><p>Learn. Grow. Lead.</p></div></a><nav className="nav-links"><a href="/">Home</a><a href="/courses">Learn</a><a href="/dashboard" className="dashboard-active">{label}</a><a href="/profile">Profile</a></nav><button className="dashboard-logout" onClick={onLogout}>Log out</button>{logoutError && <p className="auth-error" role="alert">{logoutError}</p>}</header>;
+function DashboardHeader({ label }) {
+  return <header className="navbar dashboard-header"><a href="/" className="brand"><div className="brand-icon"><span></span><span></span><span></span><span></span><span></span></div><div><h2>LibLearn</h2><p>Learn. Grow. Lead.</p></div></a><nav className="nav-links"><a href="/">Home</a><a href="/courses">Learn</a><a href="/dashboard" className="dashboard-active">{label}</a><a href="/profile">Profile</a></nav></header>;
 }
 
 function RoleSelection({ session, profile, onSelected }) {
@@ -44,7 +44,7 @@ function PlaceholderCard({ title, text }) {
   return <article className="role-placeholder-card"><span className="section-label">COMING SOON</span><h2>{title}</h2><p>{text}</p></article>;
 }
 
-function RoleHome({ session, profile, role, onLogout, logoutError }) {
+function RoleHome({ session, profile, role }) {
   const isTeacher = role === roles.teacher;
   const title = isTeacher ? "Your teaching workspace" : "Your university learning space";
   const description = isTeacher ? "A focused place to organise your teaching, classrooms, and learner support." : "A focused place to organise your courses, academic progress, and study life.";
@@ -53,17 +53,16 @@ function RoleHome({ session, profile, role, onLogout, logoutError }) {
     : [["My Courses", "Your university courses and modules will appear here."], ["Continue Learning", "Your next academic lesson will appear here."], ["Academic Progress", "Course and module progress is coming soon."], ["Academic Resources", "Saved academic resources will appear here."]];
 
   const secondaryCards = isTeacher
-    ? [["My Courses", "Teaching courses and subjects will be organised here."], ["Create Assignment", "Assignment tools are coming soon."], ["Resources", "Teaching resources will be available here."], ["Announcements", "Class announcements are coming soon."], ["Study Groups", "Class collaboration is coming soon."], ["AI Teaching Assistant", "Teaching support tools are coming soon."], ["Notifications", "Teaching notifications are coming soon."]]
-    : [["Lecturers / Teachers", "Your lecturers and teachers will appear here."], ["Classrooms", "Your enrolled classrooms are coming soon."], ["Assignments", "Academic assignments are coming soon."], ["Study Groups", "Academic study groups are coming soon."], ["Study Reminders", "Personal study reminders are coming soon."], ["AI Tutor", "Your academic AI Tutor is coming soon."], ["Notifications", "Academic notifications are coming soon."]];
+    ? [["My Courses", "Teaching courses and subjects will be organised here."], ["Create Assignment", "Assignment tools are coming soon."], ["Resources", "Teaching resources will be available here."], ["AI Teaching Assistant", "Teaching support tools are coming soon."]]
+    : [["Lecturers / Teachers", "Your lecturers and teachers will appear here."], ["Classrooms", "Your enrolled classrooms are coming soon."], ["Assignments & reminders", "Academic tasks and study reminders are coming soon."], ["AI Tutor", "Your academic AI Tutor is coming soon."]];
 
-  return <div className="dashboard-page role-dashboard-page"><DashboardHeader label={isTeacher ? "Teaching Home" : "University Home"} onLogout={onLogout} logoutError={logoutError} /><main className="role-home-main"><section className="role-home-intro"><div><span className="section-label">{isTeacher ? "TEACHING WORKSPACE" : "UNIVERSITY HOME"}</span><h1>{title}, {profile.fullName || session.fullName}.</h1><p>{description}</p><small>{profile.institution || "Complete your profile to add your institution."}</small></div><div className="dashboard-profile"><span>{session.fullName.charAt(0).toUpperCase()}</span><div><strong>{roleLabels[role]}</strong><small>{session.email}</small></div></div></section><section className="role-home-grid">{cards.map(([cardTitle, text]) => <PlaceholderCard title={cardTitle} text={text} key={cardTitle} />)}</section><section className="role-home-grid secondary">{secondaryCards.map(([cardTitle, text]) => <PlaceholderCard title={cardTitle} text={text} key={cardTitle} />)}</section></main></div>;
+  return <div className="dashboard-page role-dashboard-page"><DashboardHeader label={isTeacher ? "Teaching Home" : "University Home"} /><main className="role-home-main"><section className="role-home-intro"><div><span className="section-label">{isTeacher ? "TEACHING WORKSPACE" : "UNIVERSITY HOME"}</span><h1>{title}, {profile.fullName || session.fullName}.</h1><p>{description}</p><small>{profile.institution || "Complete your profile to add your institution."}</small></div><div className="dashboard-profile"><span>{session.fullName.charAt(0).toUpperCase()}</span><div><strong>{roleLabels[role]}</strong><small>{session.email}</small></div></div></section><section className="role-home-grid">{cards.map(([cardTitle, text]) => <PlaceholderCard title={cardTitle} text={text} key={cardTitle} />)}</section><section className="role-home-secondary"><div><span className="section-label">QUICK ACCESS</span><h2>{isTeacher ? "Teaching tools" : "Academic life"}</h2></div><div className="compact-action-list">{secondaryCards.map(([cardTitle, text]) => <button className="compact-action" type="button" key={cardTitle} disabled><strong>{cardTitle}</strong><small>{text}</small></button>)}</div></section></main></div>;
 }
 
 function Dashboard({ session }) {
   const [profile, setProfile] = useState({ fullName: session.fullName, role: null, studentId: "", username: "", educationLevel: "", classGrade: "", subjects: "", institution: "", faculty: "", department: "", universityYear: "", teachingLevel: "" });
   const [profileError, setProfileError] = useState("");
   const [profileLoading, setProfileLoading] = useState(true);
-  const [logoutError, setLogoutError] = useState("");
   const [progress, setProgress] = useState(null);
   const [progressLoading, setProgressLoading] = useState(true);
   const [progressError, setProgressError] = useState("");
@@ -103,16 +102,6 @@ function Dashboard({ session }) {
     return () => { active = false; };
   }, [session?.id, profile.role, totalLessons]);
 
-  const handleLogout = async () => {
-    setLogoutError("");
-    const result = await signOut();
-    if (!result.ok) {
-      setLogoutError(result.error || "Could not sign out. Please try again.");
-      return;
-    }
-    window.location.href = "/login";
-  };
-
   const refreshProgress = () => {
     setProgressLoading(true);
     setProgressError("");
@@ -133,14 +122,14 @@ function Dashboard({ session }) {
   if (profileLoading) return <main className="auth-page"><p>Loading your LibLearn Home...</p></main>;
   if (profileError) return <main className="auth-page"><p className="auth-error" role="alert">{profileError}</p></main>;
   if (!roleLabels[profile.role]) return <RoleSelection session={session} profile={profile} onSelected={setProfile} />;
-  if (profile.role !== roles.highSchoolStudent) return <RoleHome session={session} profile={profile} role={profile.role} onLogout={handleLogout} logoutError={logoutError} />;
+  if (profile.role !== roles.highSchoolStudent) return <RoleHome session={session} profile={profile} role={profile.role} />;
 
   const firstName = profile.fullName || session.fullName;
   const subjects = profile.subjects || "biology, science, and the world around you";
 
   return (
     <div className="dashboard-page">
-      <DashboardHeader session={session} label="Student Home" onLogout={handleLogout} logoutError={logoutError} />
+      <DashboardHeader label="Student Home" />
 
       <main className="dashboard-main">
         <section className="dashboard-welcome">
@@ -165,7 +154,7 @@ function Dashboard({ session }) {
         <section className="dashboard-grid">
           <div className="dashboard-primary-column">
             <div className="dashboard-section-heading"><div><span className="section-label">YOUR LEARNING</span><h2>My Courses</h2></div><a href="/courses">Browse courses →</a></div>
-            <article className="dashboard-course-card">
+            <article className="dashboard-course-card continue-learning-card">
               <div className="dashboard-course-cover"><span>{biologyCourse.icon}</span><small>{biologyCourse.category}</small></div>
               <div className="dashboard-course-info"><div className="dashboard-course-title"><div><span>HIGH SCHOOL · BEGINNER</span><h3>{biologyCourse.title}</h3></div><strong>{progress ? `${progress.percentage}%` : "—"}</strong></div><div className="dashboard-progress-bar"><div style={{ width: `${progress?.percentage || 0}%` }}></div></div><p>{progress ? `${progress.completedCount} of ${totalLessons} lessons completed` : "Progress is loading"}</p><a href={`/lesson?course=biology&lesson=${nextLesson || 1}`} onClick={refreshProgress}>{courseComplete ? "Review course →" : progress?.completedCount ? "Continue learning →" : "Start course →"}</a></div>
             </article>
@@ -176,12 +165,13 @@ function Dashboard({ session }) {
             <div className="dashboard-section-heading"><div><span className="section-label">FOR YOU</span><h2>Recommended next</h2></div></div>
             <article className="dashboard-recommendation"><span>✦</span><div><small>BASED ON YOUR PROFILE</small><h3>Keep exploring {subjects.split(",")[0]}.</h3><p>Biology builds a strong foundation for health, agriculture, and environmental learning.</p></div><a href="/courses">Explore →</a></article>
 
-            <div className="dashboard-section-heading"><div><span className="section-label">YOUR LIBLEARN HOME</span><h2>More ways to learn</h2></div></div>
-            <section className="dashboard-feature-strip"><PlaceholderCard title="AI Tutor" text="Your learning assistant is coming soon." /><PlaceholderCard title="Teachers & Classrooms" text="Teacher connections and classrooms are coming soon." /><PlaceholderCard title="Study Groups & Friends" text="Learning connections are coming soon." /><PlaceholderCard title="Study Reminders" text="Personal study reminders are coming soon." /></section>
+            <div className="dashboard-section-heading"><div><span className="section-label">QUICK ACTIONS</span><h2>Keep learning</h2></div></div>
+            <section className="compact-action-list dashboard-quick-actions"><a className="compact-action" href="/courses"><strong>My Courses</strong><small>Browse your learning library.</small></a><button className="compact-action" type="button" disabled><strong>AI Tutor</strong><small>Coming soon.</small></button><button className="compact-action" type="button" disabled><strong>Resources</strong><small>Coming soon.</small></button><button className="compact-action" type="button" disabled><strong>Community</strong><small>Groups and classrooms are coming soon.</small></button></section>
           </div>
 
           <aside className="dashboard-side-column">
             <section className="dashboard-panel"><div className="dashboard-panel-heading"><h2>Profile</h2><span>{profileCompletion}% COMPLETE</span></div><div className="profile-detail"><strong>{profile.username ? `@${profile.username}` : session.fullName}</strong><small>{profile.educationLevel || "Education level not set"}</small><small>{session.email}</small></div><a href="/profile" className="dashboard-secondary-action">Edit profile →</a></section>
+            <section className="dashboard-panel"><div className="dashboard-panel-heading"><h2>Today's study</h2><span>UP NEXT</span></div><p className="dashboard-empty-state">No reminders or assignments yet. Your next Biology lesson will appear above.</p></section>
             <section className="dashboard-panel certificate-panel"><div className="dashboard-panel-heading"><h2>Certificates</h2><span>ACHIEVEMENTS</span></div><div className={`certificate-status ${courseComplete ? "earned" : "locked"}`}><strong>{courseComplete ? "Biology Certificate" : "Certificate locked"}</strong><p>{courseComplete ? `You completed all ${totalLessons} Biology lessons.` : `Complete all ${totalLessons} Biology lessons to unlock your certificate.`}</p></div><span className="dashboard-secondary-action">{courseComplete ? "Certificate available soon" : progress ? `${totalLessons - progress.completedCount} lessons remaining` : "Progress loading"}</span></section>
           </aside>
         </section>

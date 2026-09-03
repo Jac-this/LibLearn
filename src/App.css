@@ -3634,15 +3634,68 @@ a {
   line-height: 1.5;
 }
 
-.dashboard-feature-strip {
+.compact-action-list {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 19px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
 }
 
-.dashboard-feature-strip .role-placeholder-card {
-  min-height: 135px;
+.compact-action {
+  display: flex;
+  min-height: 72px;
+  padding: 13px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: left;
+}
+
+.compact-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.compact-action strong {
+  color: var(--blue-deep);
+  font-size: 11px;
+}
+
+.compact-action small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.role-home-secondary {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 25px;
+  align-items: start;
+  margin-top: 38px;
+  padding-top: 28px;
+  border-top: 1px solid var(--border);
+}
+
+.role-home-secondary h2 {
+  margin-top: 8px;
+  color: var(--blue-deep);
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-size: 22px;
+}
+
+.role-home-secondary .compact-action-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-empty-state {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.5;
 }
 
 .profile-page {
@@ -3717,6 +3770,18 @@ a {
   font-weight: 700;
 }
 
+.profile-sign-out {
+  width: 100%;
+  margin-top: 18px;
+  padding: 11px;
+  color: #a12b2b;
+  background: white;
+  border: 1px solid #efcaca;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
 @media (max-width: 800px) {
   .profile-completion-banner {
     grid-template-columns: 1fr 150px;
@@ -3740,7 +3805,7 @@ a {
 
   .audience-grid,
   .role-home-grid,
-  .dashboard-feature-strip {
+  .dashboard-quick-actions {
     grid-template-columns: 1fr;
   }
 
@@ -3818,5 +3883,13 @@ a {
   .role-home-intro {
     align-items: start;
     flex-direction: column;
+  }
+
+  .role-home-secondary {
+    grid-template-columns: 1fr;
+  }
+
+  .role-home-secondary .compact-action-list {
+    grid-template-columns: 1fr;
   }
 }
