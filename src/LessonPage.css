@@ -1,3 +1,15 @@
+html.liblearn-page-exit .liblearn-course-player {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.liblearn-course-player {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
 .liblearn-course-player {
   min-height: 100vh;
   background: #0f172a;
