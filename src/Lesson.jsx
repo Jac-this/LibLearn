@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getSession } from "./authStore.js";
-import { biologyCourse, getBiologyLesson } from "./data/biologyLessons.js";
+import { getCourse, getLessonCount } from "./data/courses.js";
 import { getCourseProgress, markLessonComplete } from "./progressStore.js";
 
 function getVariant(slide, index) {
@@ -71,8 +71,9 @@ function Lesson() {
   const params = new URLSearchParams(window.location.search);
   const course = params.get("course") || "biology";
   const lessonNumber = Math.max(1, Number(params.get("lesson")) || 1);
-  const lesson = course === "biology" ? getBiologyLesson(lessonNumber) : null;
-  const totalLessons = biologyCourse.lessons.length;
+  const courseData = getCourse(course);
+  const lesson = courseData?.getLesson(lessonNumber) || null;
+  const totalLessons = courseData ? getLessonCount(courseData) : 0;
   const slides = lesson?.slides || [{ title: "Lesson Coming Soon", type: "concept", content: [{ heading: "Coming next", text: "This lesson is being prepared. More detailed learning material will be added to this course." }] }];
   const [currentSlide, setCurrentSlide] = useState(0);
   const [studentId, setStudentId] = useState(null);
@@ -147,7 +148,7 @@ function Lesson() {
       <header className="navbar"><div className="brand"><div className="brand-icon"><span></span><span></span><span></span><span></span><span></span></div><div><h2>LibLearn</h2><p>Learn. Grow. Lead.</p></div></div><nav className="nav-links"><a href="/">Home</a><a href="/courses">Courses</a><a href="/#learning-room">Learning Room</a><a href="/#community">Community</a></nav><div className="nav-actions"><button className="login-btn">Sign in</button><button className="join-btn">Join LibLearn</button></div></header>
       <main className="lesson-main">
         <div className="lesson-top"><a href={`/course?course=${course}`} className="back-link">← Back to Course</a><span>LESSON {String(lessonNumber).padStart(2, "0")} OF {totalLessons}</span></div>
-        <section className="lesson-heading"><div><span className="section-label">LIBLEARN BIOLOGY</span><h1>{lesson?.title || "Biology lesson"}</h1></div><div className="lesson-location"><strong>SLIDE {currentSlide + 1}</strong><span>of {slides.length}</span></div></section>
+        <section className="lesson-heading"><div><span className="section-label">LIBLEARN {courseData?.title?.toUpperCase() || "LEARNING"}</span><h1>{lesson?.title || `${courseData?.title || "Course"} lesson`}</h1></div><div className="lesson-location"><strong>SLIDE {currentSlide + 1}</strong><span>of {slides.length}</span></div></section>
         <div className="lesson-progress-area"><div className="lesson-progress-text"><span>Course progress</span><strong>{completedLessons.length}/{totalLessons} lessons complete</strong></div><div className="lesson-progress-bar"><div style={{ width: `${courseProgress}%` }}></div></div><div className="lesson-progress-text"><span>{progress}% through this lesson</span><strong>{slides.length - currentSlide - 1} slides remaining</strong></div><div className="lesson-progress-bar"><div style={{ width: `${progress}%` }}></div></div></div>
         {progressError && <p className="auth-error" role="alert">{progressError}</p>}
         {saveMessage && <p className="auth-success" role="status">{saveMessage}</p>}
