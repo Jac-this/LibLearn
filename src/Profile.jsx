@@ -20,13 +20,9 @@ function ThemeSetting() {
     try {
       localStorage.setItem("liblearn-theme", theme);
       const apply = () => {
-        const dark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
-        document.documentElement.dataset.theme = theme === "system" ? (dark ? "dark" : "default") : theme;
+        document.documentElement.dataset.theme = theme === "dark" ? "dark" : "default";
       };
       apply();
-      const media = window.matchMedia?.("(prefers-color-scheme: dark)");
-      media?.addEventListener?.("change", apply);
-      return () => media?.removeEventListener?.("change", apply);
     } catch {}
   }, [theme]);
   return <div className="settings-choice-group">{["dark", "default"].map((option) => <button type="button" key={option} className={theme === option ? "active" : ""} onClick={() => setTheme(option)}>{option === "default" ? "White mode" : "Dark mode"}</button>)}</div>;
