@@ -15,7 +15,7 @@ const emptyProfile = {
 };
 
 function ThemeSetting() {
-  const [theme, setTheme] = useState(() => localStorage.getItem("liblearn-theme") || "system");
+  const [theme, setTheme] = useState(() => localStorage.getItem("liblearn-theme") || "dark");
   useEffect(() => {
     try {
       localStorage.setItem("liblearn-theme", theme);
@@ -29,7 +29,7 @@ function ThemeSetting() {
       return () => media?.removeEventListener?.("change", apply);
     } catch {}
   }, [theme]);
-  return <div className="settings-choice-group">{["default", "dark", "system"].map((option) => <button type="button" key={option} className={theme === option ? "active" : ""} onClick={() => setTheme(option)}>{option === "default" ? "Default" : option === "dark" ? "Dark mode" : "System"}</button>)}</div>;
+  return <div className="settings-choice-group">{["dark", "default"].map((option) => <button type="button" key={option} className={theme === option ? "active" : ""} onClick={() => setTheme(option)}>{option === "default" ? "White mode" : "Dark mode"}</button>)}</div>;
 }
 
 function Profile({ session }) {
