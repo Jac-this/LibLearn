@@ -11,6 +11,8 @@ function LearningAssistant({
   const [question, setQuestion] = useState("");
   const [messages, setMessages] = useState([]);
   const [expanded, setExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const suggestions = useMemo(() => {
     const heading = section?.heading || topicTitle || "this lesson";
@@ -22,14 +24,53 @@ function LearningAssistant({
     ];
   }, [section?.heading, topicTitle]);
 
-  const submitQuestion = (event) => {
-    event.preventDefault();
-    const trimmed = question.trim();
-    if (!trimmed) return;
+  const sendQuestion = async (text) => {
+    const trimmed = text.trim();
+    if (!trimmed || loading) return;
 
-    setMessages((current) => [...current, { role: "student", text: trimmed }]);
+    const nextMessages = [...messages, { role: "user", content: trimmed }];
+    setMessages(nextMessages);
     setQuestion("");
     setExpanded(true);
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/ai-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseTitle,
+          moduleTitle,
+          topicTitle,
+          section: section
+            ? { heading: section.heading || "", text: section.text || "" }
+            : null,
+          learningOutcomes,
+          messages: nextMessages,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.error || "The AI assistant could not respond.");
+      }
+
+      setMessages((current) => [
+        ...current,
+        { role: "assistant", content: result.response },
+      ]);
+    } catch (requestError) {
+      setError(requestError.message || "The AI assistant could not respond.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const submitQuestion = (event) => {
+    event.preventDefault();
+    sendQuestion(question);
   };
 
   const askSuggestion = (suggestion) => {
@@ -54,14 +95,21 @@ function LearningAssistant({
         <div className="liblearn-ai-conversation" aria-live="polite">
           {messages.map((message, index) => (
             <div className={`liblearn-ai-message ${message.role}`} key={`${message.role}-${index}`}>
-              <span>{message.role === "student" ? "You" : "AI"}</span>
-              <p>{message.text}</p>
+              <span>{message.role === "user" ? "You" : "AI"}</span>
+              <p>{message.content}</p>
             </div>
           ))}
-          <div className="liblearn-ai-placeholder">
-            <span>AI</span>
-            <p>The lesson-aware AI response will appear here.</p>
-          </div>
+          {loading && (
+            <div className="liblearn-ai-placeholder">
+              <span>AI</span>
+              <p>Thinking about this lesson...</p>
+            </div>
+          )}
+          {error && (
+            <div className="liblearn-ai-error" role="alert">
+              {error}
+            </div>
+          )}
         </div>
       )}
 
@@ -97,8 +145,9 @@ function LearningAssistant({
           onChange={(event) => setQuestion(event.target.value)}
           placeholder="Ask about this lesson..."
           aria-label="Ask the Learning Assistant"
+          disabled={loading}
         />
-        <button type="submit" aria-label="Send question" disabled={!question.trim()}>
+        <button type="submit" aria-label="Send question" disabled={!question.trim() || loading}>
           <span aria-hidden="true">→</span>
         </button>
       </form>
