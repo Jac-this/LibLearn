@@ -4519,3 +4519,84 @@ html[data-theme="dark"] .search-box input::placeholder {
   color: #000000 !important;
   opacity: 1 !important;
 }
+
+
+/* DARK MODE — FIX THE THREE REPORTED LIGHT SURFACE GROUPS
+   These are intentionally light design cards. Keep them light enough to read,
+   but dim the pure white and force their content to deep black. */
+
+/* Dashboard → Academic life */
+html[data-theme="dark"] .role-home-secondary .compact-action,
+html[data-theme="dark"] .role-home-secondary .compact-action *,
+html[data-theme="dark"] .role-home-secondary .compact-action strong,
+html[data-theme="dark"] .role-home-secondary .compact-action small {
+  background: #e6e6e6 !important;
+  color: #000000 !important;
+  border-color: #c8c8c8 !important;
+}
+
+/* Home → Meet LibLearn AI */
+html[data-theme="dark"] .ai-section {
+  background: #e6e6e6 !important;
+  color: #000000 !important;
+  border-color: #c8c8c8 !important;
+}
+
+html[data-theme="dark"] .ai-section .ai-content,
+html[data-theme="dark"] .ai-section .ai-content *,
+html[data-theme="dark"] .ai-section .ai-content h2,
+html[data-theme="dark"] .ai-section .ai-content h2 span,
+html[data-theme="dark"] .ai-section .ai-content > p,
+html[data-theme="dark"] .ai-section .ai-content .section-label,
+html[data-theme="dark"] .ai-section .ai-examples,
+html[data-theme="dark"] .ai-section .ai-examples * {
+  color: #000000 !important;
+}
+
+html[data-theme="dark"] .ai-section .ai-examples div {
+  background: #dcdcdc !important;
+  color: #000000 !important;
+  border-color: #bdbdbd !important;
+}
+
+html[data-theme="dark"] .ai-section .primary-button {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* Home → You don't have to study alone → study-group cards */
+html[data-theme="dark"] .community-card {
+  background: #dcdcdc !important;
+  color: #000000 !important;
+  border-color: #bdbdbd !important;
+}
+
+html[data-theme="dark"] .community-card-header,
+html[data-theme="dark"] .community-card-header *,
+html[data-theme="dark"] .study-group,
+html[data-theme="dark"] .study-group *,
+html[data-theme="dark"] .study-group strong,
+html[data-theme="dark"] .study-group p {
+  color: #000000 !important;
+}
+
+html[data-theme="dark"] .study-group {
+  background: #e6e6e6 !important;
+  border-color: #c8c8c8 !important;
+}
+
+html[data-theme="dark"] .study-group p {
+  color: #000000 !important;
+}
+
+html[data-theme="dark"] .study-group > span {
+  background: #cfcfcf !important;
+  color: #000000 !important;
+}
+
+/* Do not let the global dark text override turn these three surfaces white again. */
+html[data-theme="dark"] .role-home-secondary .compact-action *,
+html[data-theme="dark"] .ai-section .ai-content *,
+html[data-theme="dark"] .community-card .study-group * {
+  text-shadow: none !important;
+}
