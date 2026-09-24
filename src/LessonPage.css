@@ -341,3 +341,34 @@
   .liblearn-player-bottom { padding: 10px 14px; }
   .liblearn-next-button { min-width: 105px; }
 }
+
+
+.liblearn-topic-list button.locked {
+  opacity: .55;
+  cursor: not-allowed;
+}
+.liblearn-topic-list button.locked:hover {
+  background: transparent;
+  color: #94a3b8;
+}
+
+.liblearn-topic-reading {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+.liblearn-topic-reading section {
+  padding-bottom: 4px;
+}
+.liblearn-topic-reading h2 {
+  margin: 0 0 10px;
+  color: #f8fafc;
+  font-size: 19px;
+  line-height: 1.35;
+}
+.liblearn-topic-reading p {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 15px;
+  line-height: 1.8;
+}
