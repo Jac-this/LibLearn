@@ -284,13 +284,15 @@
 }
 
 .liblearn-player-bottom.collapsed {
-  min-height: 18px;
-  height: 18px;
-  padding: 0 28px;
+  min-height: 76px;
+  height: 76px;
+  padding: 14px 28px;
+  grid-template-columns: 1fr auto auto;
   border-top: 1px solid #334155;
 }
 
-.liblearn-player-bottom.collapsed > :not(.liblearn-bottom-toggle) {
+.liblearn-player-bottom.collapsed > .liblearn-bottom-progress,
+.liblearn-player-bottom.collapsed > .liblearn-learning-social {
   display: none;
 }
 
