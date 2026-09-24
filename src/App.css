@@ -5040,3 +5040,86 @@ html[data-theme="dark"] .courses-page .login-btn:hover {
 html[data-theme="dark"] .courses-page .login-btn * {
   color: #edf3fb !important;
 }
+
+
+/* BIOLOGY + LEARNING ENVIRONMENT — THEME CONSISTENCY
+   Preserve the existing design and dark palette. These rules only ensure
+   Biology surfaces and their text follow the active global theme. */
+html[data-theme="dark"] .biology-overview,
+html[data-theme="dark"] .biology-outline-section {
+  background: #0c1119 !important;
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] .biology-overview-section,
+html[data-theme="dark"] .biology-outcome,
+html[data-theme="dark"] .biology-outline-item {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .biology-section-heading h2,
+html[data-theme="dark"] .biology-outcome p,
+html[data-theme="dark"] .biology-outline-title,
+html[data-theme="dark"] .biology-outline-title small {
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] .lesson-page {
+  background: #0c1119 !important;
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] .lesson-reading,
+html[data-theme="dark"] .lesson-outline button.current,
+html[data-theme="dark"] .lesson-progress-card,
+html[data-theme="dark"] .lesson-explore-bar {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .reading-heading h2,
+html[data-theme="dark"] .learning-block h3,
+html[data-theme="dark"] .reflection-panel h3,
+html[data-theme="dark"] .check-panel h3 {
+  color: #d9e8ff !important;
+}
+
+html[data-theme="dark"] .learning-lead p {
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] .learning-block p,
+html[data-theme="dark"] .reflection-panel ol,
+html[data-theme="dark"] .check-panel ol,
+html[data-theme="dark"] .lesson-progress-card small {
+  color: #9eacbd !important;
+}
+
+html[data-theme="dark"] .reflection-panel,
+html[data-theme="dark"] .check-panel {
+  background: #182231 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .lesson-outline button.current strong,
+html[data-theme="dark"] .lesson-outline button.current small,
+html[data-theme="dark"] .lesson-outline button.visited strong,
+html[data-theme="dark"] .lesson-outline button.visited small {
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] .lesson-explore-bar p,
+html[data-theme="dark"] .lesson-explore-bar small {
+  color: #9eacbd !important;
+}
+
+html[data-theme="dark"] .lesson-explore-bar button,
+html[data-theme="dark"] .quiet-button {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
