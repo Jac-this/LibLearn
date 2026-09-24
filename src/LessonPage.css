@@ -1,0 +1,343 @@
+.liblearn-course-player {
+  min-height: 100vh;
+  background: #0f172a;
+  color: #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  font-family: inherit;
+}
+
+.liblearn-player-topbar {
+  min-height: 72px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background: #111827;
+  border-bottom: 1px solid #263244;
+}
+
+.liblearn-player-course,
+.liblearn-player-actions,
+.liblearn-progress-label,
+.liblearn-learning-social {
+  display: flex;
+  align-items: center;
+}
+
+.liblearn-player-course { gap: 14px; min-width: 0; }
+.liblearn-player-course > div { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.liblearn-player-course span,
+.liblearn-sidebar-heading span,
+.liblearn-topic-breadcrumb,
+.liblearn-topic-placeholder span {
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.liblearn-player-course strong {
+  color: #f8fafc;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.liblearn-sidebar-toggle {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #334155;
+  border-radius: 7px;
+  background: #172033;
+  color: #e2e8f0;
+  cursor: pointer;
+}
+
+.liblearn-player-actions { gap: 12px; }
+.liblearn-xp {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 11px;
+  border: 1px solid #334155;
+  border-radius: 7px;
+  background: #172033;
+}
+.liblearn-xp span { color: #94a3b8; font-size: 9px; font-weight: 900; }
+.liblearn-xp strong { color: #f8fafc; font-size: 12px; }
+.liblearn-certify-button {
+  border: 1px solid #475569;
+  border-radius: 7px;
+  padding: 10px 15px;
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.liblearn-player-body {
+  width: 100%;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+}
+
+.liblearn-course-sidebar {
+  min-height: calc(100vh - 72px - 92px);
+  padding: 28px 18px;
+  background: #111827;
+  border-right: 1px solid #263244;
+}
+
+.liblearn-sidebar-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 0 10px 20px;
+  border-bottom: 1px solid #263244;
+}
+.liblearn-sidebar-heading strong {
+  color: #f8fafc;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.liblearn-topic-list { padding-top: 12px; }
+.liblearn-topic-list button {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  padding: 11px 10px;
+  border: 0;
+  border-left: 2px solid transparent;
+  border-radius: 0 6px 6px 0;
+  background: transparent;
+  color: #94a3b8;
+  text-align: left;
+  cursor: pointer;
+}
+.liblearn-topic-list button:hover { background: #172033; color: #e2e8f0; }
+.liblearn-topic-list button.current {
+  background: #1a2638;
+  border-left-color: #94a3b8;
+  color: #f8fafc;
+}
+.liblearn-topic-list button.completed { color: #cbd5e1; }
+.liblearn-topic-number {
+  font-size: 10px;
+  font-weight: 900;
+  padding-top: 2px;
+}
+.liblearn-topic-list button > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.liblearn-topic-list strong {
+  font-size: 11px;
+  line-height: 1.45;
+}
+.liblearn-topic-list small {
+  color: #64748b;
+  font-size: 9px;
+  text-transform: capitalize;
+}
+
+.liblearn-sidebar-placeholder {
+  margin: 18px 10px;
+  padding: 14px;
+  border: 1px dashed #334155;
+  border-radius: 7px;
+}
+.liblearn-sidebar-placeholder p {
+  margin-top: 7px;
+  color: #64748b;
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.liblearn-sidebar-tools {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #263244;
+}
+.liblearn-sidebar-tools button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border: 0;
+  background: transparent;
+  color: #94a3b8;
+  text-align: left;
+  font-size: 10px;
+  cursor: pointer;
+}
+.liblearn-sidebar-tools button:hover { color: #f8fafc; }
+.liblearn-sidebar-tools small { margin-left: auto; color: #64748b; }
+
+.liblearn-topic-main {
+  width: min(860px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 52px 0 150px;
+}
+.liblearn-topic-breadcrumb {
+  display: flex;
+  gap: 9px;
+  margin-bottom: 45px;
+}
+
+.liblearn-topic-content {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.liblearn-topic-content h1 {
+  margin: 0 0 26px;
+  color: #f8fafc;
+  font-size: clamp(34px, 5vw, 52px);
+  line-height: 1.08;
+  letter-spacing: -1.5px;
+}
+.liblearn-topic-intro {
+  margin: 0 0 26px;
+  color: #cbd5e1;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+.liblearn-outcomes {
+  display: flex;
+  flex-direction: column;
+  gap: 17px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.liblearn-outcomes li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 13px;
+  align-items: start;
+  color: #e2e8f0;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.liblearn-outcome-marker {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #475569;
+  border-radius: 50%;
+  color: #94a3b8;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.liblearn-empty-state,
+.liblearn-topic-placeholder {
+  color: #94a3b8;
+  line-height: 1.7;
+}
+.liblearn-topic-placeholder {
+  padding: 28px;
+  border: 1px solid #263244;
+  border-radius: 8px;
+  background: #111827;
+}
+.liblearn-topic-placeholder p { margin-top: 8px; }
+
+.liblearn-player-bottom {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: minmax(240px, 1fr) auto auto;
+  align-items: center;
+  gap: 30px;
+  padding: 14px 28px;
+  background: #111827;
+  border-top: 1px solid #334155;
+}
+.liblearn-bottom-progress { min-width: 220px; }
+.liblearn-progress-label {
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 8px;
+  color: #94a3b8;
+  font-size: 10px;
+}
+.liblearn-progress-label strong { color: #e2e8f0; }
+.liblearn-progress-track {
+  height: 7px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #334155;
+}
+.liblearn-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #e2e8f0;
+  transition: width .25s ease;
+}
+
+.liblearn-learning-social {
+  gap: 7px;
+  color: #94a3b8;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.liblearn-social-separator { color: #475569; }
+
+.liblearn-next-button {
+  min-width: 145px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border: 0;
+  border-radius: 7px;
+  background: #e2e8f0;
+  color: #0f172a;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.liblearn-next-button:hover { background: #f8fafc; }
+.liblearn-next-button:disabled { opacity: .45; cursor: not-allowed; }
+
+@media (max-width: 850px) {
+  .liblearn-player-body { grid-template-columns: 1fr; }
+  .liblearn-course-sidebar {
+    min-height: auto;
+    display: none;
+  }
+  .liblearn-topic-main { width: min(100% - 32px, 760px); padding-top: 35px; }
+  .liblearn-player-bottom {
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+  }
+  .liblearn-learning-social { display: none; }
+}
+
+@media (max-width: 560px) {
+  .liblearn-player-topbar { padding: 0 14px; }
+  .liblearn-player-course strong { max-width: 180px; }
+  .liblearn-xp { display: none; }
+  .liblearn-topic-content h1 { font-size: 34px; }
+  .liblearn-player-bottom { padding: 10px 14px; }
+  .liblearn-next-button { min-width: 105px; }
+}
