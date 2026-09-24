@@ -25,17 +25,9 @@ function App() {
   useEffect(() => {
     try {
       const saved = localStorage.getItem("liblearn-theme") || "dark";
-      const applyTheme = () => {
-        const systemDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
-        document.documentElement.dataset.theme =
-          saved === "dark" ? "dark" : "default";
-      };
-
-      applyTheme();
-
-      return undefined;
+      document.documentElement.dataset.theme = saved === "default" ? "default" : "dark";
     } catch {
-      document.documentElement.dataset.theme = "default";
+      document.documentElement.dataset.theme = "dark";
     }
   }, []);
 
