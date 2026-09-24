@@ -2,19 +2,39 @@ import { useEffect, useState } from "react";
 import { getSession, signOut } from "./authStore.js";
 import { getCourse } from "./data/courses.js";
 
-function LegacyCourseDetails({ courseId, course }) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const slides = [{ title: course.lessons[0], type: "concept", content: [{ heading: "Coming next", text: "This course is being developed into the same detailed slide-by-slide learning system used for Biology." }] }];
+function LegacyCourseDetails({ course }) {
+  const modules = course?.modules || [];
 
   return (
     <main className="course-details-page">
-      <section className={`course-details-hero ${course.color}`}><div className="course-details-hero-content"><a href="/courses" className="back-link">← Back to Courses</a><span className="course-details-category">{course.category}</span><h1>{course.title}</h1><p>{course.description}</p><div className="course-details-meta"><span>📚 {course.lessons.length} lessons</span><span>🎯 {course.level}</span><span>🏆 Certificate of completion</span></div></div><div className="course-details-icon">{course.icon}</div></section>
-      <section className="course-selector"><p className="section-label">COURSE LESSONS</p><div className="course-selector-buttons">{course.lessons.map((lesson, index) => <a key={lesson.id || lesson.title || index} href={`/lesson?course=${courseId}&lesson=${index + 1}`}>{index + 1}. {lesson.title || lesson}</a>)}</div></section>
-      <main className="course-details-content" id="lesson-area"><div className="lesson-progress-header"><div><span className="section-label">LESSON 1</span><h2>{course.lessons[0]?.title || course.lessons[0]}</h2></div><div className="slide-counter">Slide 1 of 1</div></div><div className="lesson-progress-bar"><div style={{ width: "100%" }}></div></div><article className={`learning-slide ${slides[currentSlide].type}`}><div className="slide-number">01</div><span className="slide-type">{course.category}</span><h1>{slides[currentSlide].title}</h1><div className="slide-content"><div className="slide-section"><h3>{slides[currentSlide].content[0].heading}</h3><p>{slides[currentSlide].content[0].text}</p></div></div></article><div className="slide-controls"><button className="secondary-button" onClick={() => setCurrentSlide(0)} disabled>← Previous</button><span>1 / 1</span><button className="primary-button" onClick={() => setCurrentSlide(0)} disabled>Lesson complete</button></div></main>
+      <section className={`course-details-hero ${course.color || ""}`}>
+        <div className="course-details-hero-content">
+          <a href="/courses" className="back-link">← Back to Courses</a>
+          <span className="course-details-category">{course.category}</span>
+          <h1>{course.title}</h1>
+          <p>{course.description}</p>
+          <div className="course-details-meta">
+            <span>📚 {modules.length} modules</span>
+            <span>🎯 {course.level}</span>
+            <span>📈 Guided learning</span>
+          </div>
+        </div>
+        <div className="course-details-icon">{course.icon}</div>
+      </section>
+
+      <section className="course-selector">
+        <p className="section-label">COURSE MODULES</p>
+        <div className="course-selector-buttons">
+          {modules.map((module, index) => (
+            <a key={module.id || index} href={`/lesson?course=${course.id}&module=${index + 1}&topic=1`}>
+              {index + 1}. {module.title}
+            </a>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }
-
 function CourseDetails({ session: initialSession }) {
   const [session, setSession] = useState(initialSession);
   useEffect(() => { if (initialSession !== undefined) setSession(initialSession); else getSession().then(setSession).catch(() => setSession(null)); }, [initialSession]);
@@ -71,7 +91,7 @@ function CourseDetails({ session: initialSession }) {
             <div className="biology-outline-list">{modules.map((module, index) => <a className="biology-outline-item" href={`/lesson?course=biology&module=${index + 1}&topic=1`} key={module.id || index}><span className="biology-outline-number">{String(index + 1).padStart(2, "0")}</span><span className="biology-outline-title"><small>MODULE {index + 1}</small>{module.title}</span><span className="biology-outline-arrow">→</span></a>)}</div>
           </section>
 
-          <section className="biology-overview-cta"><span>READY TO BEGIN?</span><h2>Start with the first lesson.</h2><p>Learn the language of life, then build from there.</p><a className="biology-start-button" href="/lesson?course=biology&lesson=1">Start Course <span>→</span></a></section>
+          <section className="biology-overview-cta"><span>READY TO BEGIN?</span><h2>Start with the first lesson.</h2><p>Learn the language of life, then build from there.</p><a className="biology-start-button" href="/lesson?course=biology&module=1&topic=1">Start Course <span>→</span></a></section>
       </main>
     </div>
   );
