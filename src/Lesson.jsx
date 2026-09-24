@@ -3,11 +3,11 @@ import { getSession } from "./authStore.js";
 import { getCourse, getLessonCount } from "./data/courses.js";
 import { getCourseProgress, markLessonComplete } from "./progressStore.js";
 
-function getVariant(slide, index) {
-  if (slide.layout) return slide.layout;
-  if (slide.summary) return "summary";
-  const title = slide.title?.toLowerCase() || "";
-  if (slide.quiz || title.includes("review") || title.includes("quiz")) return "quiz";
+function getVariant(unit, index) {
+  if (unit.layout) return unit.layout;
+  if (unit.summary) return "summary";
+  const title = unit.title?.toLowerCase() || "";
+  if (unit.quiz || title.includes("review") || title.includes("quiz")) return "quiz";
   if (title.includes("scientist") || title.includes("darwin") || title.includes("mendel") || title.includes("pasteur")) return "scientist";
   if (title.includes("liberia") || title.includes("africa") || title.includes("context")) return "context";
   if (title.includes("process") || title.includes("cycle") || title.includes("method") || title.includes("steps")) return "process";
@@ -19,7 +19,7 @@ function getVariant(slide, index) {
   return "concept";
 }
 
-function SlideCard({ item, index }) {
+function ContentCard({ item, index }) {
   return (
     <section className="textbook-card" key={`${item.heading}-${index}`}>
       <span className="textbook-card-index">{String(index + 1).padStart(2, "0")}</span>
@@ -31,8 +31,8 @@ function SlideCard({ item, index }) {
   );
 }
 
-function SlideContent({ slide, variant }) {
-  const items = slide.content || [];
+function LearningContent({ unit, variant }) {
+  const items = unit.content || [];
   const lead = items[0];
   const rest = items.slice(1);
 
@@ -53,7 +53,7 @@ function SlideContent({ slide, variant }) {
   }
 
   if (variant === "scientist") {
-    return <div className="presentation-scientist"><div className="scientist-mark">BIOLOGY<br />SPOTLIGHT</div><div><span className="slide-kicker">IMPORTANT CONTRIBUTION</span><h2>{lead?.heading}</h2><p className="scientist-intro">{lead?.text}</p></div><div className="textbook-grid compact">{rest.map((item, index) => <SlideCard item={item} index={index} key={item.heading} />)}</div></div>;
+    return <div className="presentation-scientist"><div className="scientist-mark">BIOLOGY<br />SPOTLIGHT</div><div><span className="content-kicker">IMPORTANT CONTRIBUTION</span><h2>{lead?.heading}</h2><p className="scientist-intro">{lead?.text}</p></div><div className="textbook-grid compact">{rest.map((item, index) => <SlideCard item={item} index={index} key={item.heading} />)}</div></div>;
   }
 
   if (variant === "example" || variant === "application" || variant === "experiment") {
@@ -61,7 +61,7 @@ function SlideContent({ slide, variant }) {
   }
 
   if (variant === "summary" || variant === "quiz") {
-    return <div className="presentation-summary"><div className="summary-lead"><span>{variant === "quiz" ? "KNOWLEDGE CHECK" : "LESSON RECAP"}</span><p>{lead?.text}</p></div><div className="textbook-grid">{rest.map((item, index) => <SlideCard item={item} index={index} key={item.heading} />)}</div>{slide.reviewQuestions && <div className="question-panel"><span>REVIEW QUESTIONS</span><ol>{slide.reviewQuestions.map((question) => <li key={question}>{question}</li>)}</ol></div>}{slide.quiz && <div className="question-panel quiz-panel"><span>SHORT QUIZ</span><ol>{slide.quiz.map((question) => <li key={question}>{question}</li>)}</ol></div>}</div>;
+    return <div className="presentation-summary"><div className="summary-lead"><span>{variant === "quiz" ? "KNOWLEDGE CHECK" : "LESSON RECAP"}</span><p>{lead?.text}</p></div><div className="textbook-grid">{rest.map((item, index) => <SlideCard item={item} index={index} key={item.heading} />)}</div>{unit.reviewQuestions && <div className="question-panel"><span>REVIEW QUESTIONS</span><ol>{slide.reviewQuestions.map((question) => <li key={question}>{question}</li>)}</ol></div>}{slide.quiz && <div className="question-panel quiz-panel"><span>SHORT QUIZ</span><ol>{slide.quiz.map((question) => <li key={question}>{question}</li>)}</ol></div>}</div>;
   }
 
   return <div className="presentation-standard"><div className="standard-lead"><span>{variant === "application" ? "IN PRACTICE" : "CORE CONCEPT"}</span><p>{lead?.text}</p></div><div className="textbook-grid">{rest.map((item, index) => <SlideCard item={item} index={index} key={item.heading} />)}</div></div>;
@@ -74,7 +74,7 @@ function Lesson() {
   const courseData = getCourse(course);
   const lesson = courseData?.getLesson(lessonNumber) || null;
   const totalLessons = courseData ? getLessonCount(courseData) : 0;
-  const slides = lesson?.slides || [{ title: "Lesson Coming Soon", type: "concept", content: [{ heading: "Coming next", text: "This lesson is being prepared. More detailed learning material will be added to this course." }] }];
+  const learningContent = lesson?.content || [{ title: "Learning content coming soon", type: "concept", content: [{ heading: "Coming next", text: "This learning content is being prepared. More detailed material will be added to this course." }] }];
   const [currentSlide, setCurrentSlide] = useState(0);
   const [studentId, setStudentId] = useState(null);
   const [completedLessons, setCompletedLessons] = useState([]);
@@ -113,10 +113,10 @@ function Lesson() {
     });
     return () => { active = false; };
   }, [course, totalLessons]);
-  const slide = slides[currentSlide];
-  const variant = getVariant(slide, currentSlide);
+  const unit = learningContent[currentSlide];
+  const variant = getVariant(unit, currentSlide);
   const isCompleted = completedLessons.includes(lessonNumber);
-  const progress = Math.round(((currentSlide + 1) / slides.length) * 100);
+  const progress = Math.round(((currentSlide + 1) / learningContent.length) * 100);
   const courseProgress = Math.round((completedLessons.length / totalLessons) * 100);
 
   const completeLesson = async () => {
@@ -141,20 +141,20 @@ function Lesson() {
   };
 
   const nextLesson = () => { window.location.href = `/lesson?course=${course}&lesson=${lessonNumber + 1}`; };
-  const moveSlide = (amount) => setCurrentSlide((value) => Math.max(0, Math.min(slides.length - 1, value + amount)));
+  const moveSlide = (amount) => setCurrentSlide((value) => Math.max(0, Math.min(learningContent.length - 1, value + amount)));
 
   return (
     <div className="lesson-page">
       <header className="navbar"><div className="brand"><div className="brand-icon"><span></span><span></span><span></span><span></span><span></span></div><div><h2>LibLearn</h2><p>Learn. Grow. Lead.</p></div></div><nav className="nav-links"><a href="/">Home</a><a href="/courses">Courses</a><a href="/#learning-room">Learning Room</a><a href="/#community">Community</a></nav><div className="nav-actions"><button className="login-btn">Sign in</button><button className="join-btn">Join LibLearn</button></div></header>
       <main className="lesson-main">
         <div className="lesson-top"><a href={`/course?course=${course}`} className="back-link">← Back to Course</a><span>LESSON {String(lessonNumber).padStart(2, "0")} OF {totalLessons}</span></div>
-        <section className="lesson-heading"><div><span className="section-label">LIBLEARN {courseData?.title?.toUpperCase() || "LEARNING"}</span><h1>{lesson?.title || `${courseData?.title || "Course"} lesson`}</h1></div><div className="lesson-location"><strong>SLIDE {currentSlide + 1}</strong><span>of {slides.length}</span></div></section>
-        <div className="lesson-progress-area"><div className="lesson-progress-text"><span>Course progress</span><strong>{completedLessons.length}/{totalLessons} lessons complete</strong></div><div className="lesson-progress-bar"><div style={{ width: `${courseProgress}%` }}></div></div><div className="lesson-progress-text"><span>{progress}% through this lesson</span><strong>{slides.length - currentSlide - 1} slides remaining</strong></div><div className="lesson-progress-bar"><div style={{ width: `${progress}%` }}></div></div></div>
+        <section className="lesson-heading"><div><span className="section-label">LIBLEARN {courseData?.title?.toUpperCase() || "LEARNING"}</span><h1>{lesson?.title || `${courseData?.title || "Course"} lesson`}</h1></div><div className="lesson-location"><strong>SLIDE {currentSlide + 1}</strong><span>of {learningContent.length}</span></div></section>
+        <div className="lesson-progress-area"><div className="lesson-progress-text"><span>Course progress</span><strong>{completedLessons.length}/{totalLessons} lessons complete</strong></div><div className="lesson-progress-bar"><div style={{ width: `${courseProgress}%` }}></div></div><div className="lesson-progress-text"><span>{progress}% through this lesson</span><strong>{learningContent.length - currentSlide - 1} learningContent remaining</strong></div><div className="lesson-progress-bar"><div style={{ width: `${progress}%` }}></div></div></div>
         {progressError && <p className="auth-error" role="alert">{progressError}</p>}
         {saveMessage && <p className="auth-success" role="status">{saveMessage}</p>}
         {saveWarning && <p className="auth-note" role="status">{saveWarning}</p>}
-        <article className={`lesson-slide presentation-slide ${variant}`}><div className="lesson-slide-number">{String(currentSlide + 1).padStart(2, "0")}</div><div className="lesson-slide-content"><div className="slide-meta"><span>{variant.replace("-", " ").toUpperCase()}</span><span>LESSON {lessonNumber}</span></div><h2 className="presentation-title">{slide.title || "Lesson summary"}</h2><SlideContent slide={slide} variant={variant} /></div></article>
-        <div className="lesson-navigation"><button className="lesson-nav-button secondary" onClick={() => moveSlide(-1)} disabled={currentSlide === 0}>← Previous</button><span className="navigation-count">{currentSlide + 1} / {slides.length}</span>{currentSlide === slides.length - 1 ? <>{!isCompleted && <button className="lesson-nav-button primary" onClick={completeLesson} disabled={sessionLoading || progressLoading || saving || !studentId}>{saving ? "Saving..." : progressLoading ? "Loading progress..." : "Complete Lesson ✓"}</button>}{isCompleted && lessonNumber < totalLessons && <button className="lesson-nav-button primary" onClick={nextLesson}>Next Lesson →</button>}{isCompleted && lessonNumber === totalLessons && <a className="lesson-nav-button primary" href={`/course?course=${course}`}>Back to Course</a>}</> : <button className="lesson-nav-button primary" onClick={() => moveSlide(1)}>Next →</button>}</div>
+        <article className={`lesson-slide learning-content-view ${variant}`}><div className="learning-content-number">{String(currentSlide + 1).padStart(2, "0")}</div><div className="learning-content-body"><div className="content-meta"><span>{variant.replace("-", " ").toUpperCase()}</span><span>LESSON {lessonNumber}</span></div><h2 className="learning-content-title">{unit.title || "Learning section"}</h2><SlideContent slide={slide} variant={variant} /></div></article>
+        <div className="lesson-navigation"><button className="lesson-nav-button secondary" onClick={() => moveSlide(-1)} disabled={currentSlide === 0}>← Previous</button><span className="navigation-count">{currentSlide + 1} / {learningContent.length}</span>{currentSlide === learningContent.length - 1 ? <>{!isCompleted && <button className="lesson-nav-button primary" onClick={completeLesson} disabled={sessionLoading || progressLoading || saving || !studentId}>{saving ? "Saving..." : progressLoading ? "Loading progress..." : "Complete Lesson ✓"}</button>}{isCompleted && lessonNumber < totalLessons && <button className="lesson-nav-button primary" onClick={nextLesson}>Next Lesson →</button>}{isCompleted && lessonNumber === totalLessons && <a className="lesson-nav-button primary" href={`/course?course=${course}`}>Back to Course</a>}</> : <button className="lesson-nav-button primary" onClick={() => moveSlide(1)}>Next →</button>}</div>
       </main>
     </div>
   );
