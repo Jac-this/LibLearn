@@ -61,6 +61,11 @@ function LessonPage({
   const previousIndex = Math.max(0, currentTopicIndex - 1);
   const previousProgress = Math.round((previousIndex / Math.max(1, Number(totalTopics) || 1)) * 100);
 
+  const navigateSmoothly = (action) => {
+    document.documentElement.classList.add("liblearn-page-exit");
+    window.setTimeout(action, 220);
+  };
+
   const handlePrevious = () => {
     if (topicSections.length > 0 && currentSectionIndex > 0) {
       const previousSectionIndex = currentSectionIndex - 1;
@@ -71,10 +76,10 @@ function LessonPage({
 
     if (currentTopicIndex <= 0) return;
     setProgress(previousProgress);
-    onPrevious?.({
+    navigateSmoothly(() => onPrevious?.({
       progress: previousProgress,
       currentTopicIndex: currentTopicIndex - 1,
-    });
+    }));
   };
 
   const handleNext = () => {
@@ -86,10 +91,10 @@ function LessonPage({
     }
 
     setProgress(nextProgress);
-    onNext?.({
+    navigateSmoothly(() => onNext?.({
       progress: nextProgress,
       currentTopicIndex: currentTopicIndex + 1,
-    });
+    }));
   };
 
   const renderTopicContent = () => {
