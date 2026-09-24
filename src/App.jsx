@@ -23,15 +23,23 @@ function ProtectedRoute({ children, session }) {
 
 function App() {
   useEffect(() => {
-    const saved = localStorage.getItem("liblearn-theme") || "system";
-    const applyTheme = () => {
-      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      document.documentElement.dataset.theme = saved === "system" ? (systemDark ? "dark" : "default") : saved;
-    };
-    applyTheme();
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    media.addEventListener?.("change", applyTheme);
-    return () => media.removeEventListener?.("change", applyTheme);
+    try {
+      const saved = localStorage.getItem("liblearn-theme") || "system";
+      const applyTheme = () => {
+        const systemDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
+        document.documentElement.dataset.theme =
+          saved === "system" ? (systemDark ? "dark" : "default") : saved;
+      };
+
+      applyTheme();
+
+      const media = window.matchMedia?.("(prefers-color-scheme: dark)");
+      media?.addEventListener?.("change", applyTheme);
+
+      return () => media?.removeEventListener?.("change", applyTheme);
+    } catch {
+      document.documentElement.dataset.theme = "default";
+    }
   }, []);
 
   const [session, setSession] = useState(undefined);
