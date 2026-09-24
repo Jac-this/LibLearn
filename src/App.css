@@ -4122,3 +4122,53 @@ html[data-theme="dark"] .dashboard-logout { background:#121a25; color:var(--text
 html[data-theme="dark"] .profile-option-list a, html[data-theme="dark"] .profile-overview-card, html[data-theme="dark"] .settings-choice-group button { background:#121a25; border-color:var(--border); color:var(--text); }
 html[data-theme="dark"] .profile-side a:hover, html[data-theme="dark"] .profile-side a.active { background:#172b45; }
 @media (max-width:800px) { .profile-side-layout { grid-template-columns:1fr; gap:20px; } .profile-side { position:static; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); overflow:auto; } .profile-side .section-label { grid-column:1/-1; } .profile-side a { white-space:nowrap; } .profile-avatar-editor { grid-template-columns:1fr; } }
+
+
+/* DARK THEME SURFACE CONSISTENCY */
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .home-join-link,
+html[data-theme="dark"] .login-btn,
+html[data-theme="dark"] .auth-panel,
+html[data-theme="dark"] .course-card,
+html[data-theme="dark"] .resource-card,
+html[data-theme="dark"] .progress-card,
+html[data-theme="dark"] .lesson,
+html[data-theme="dark"] .profile-panel,
+html[data-theme="dark"] .dashboard-summary,
+html[data-theme="dark"] .dashboard-panel,
+html[data-theme="dark"] .dashboard-course-card,
+html[data-theme="dark"] .dashboard-next-card {
+  background: var(--white);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .navbar .nav-links a,
+html[data-theme="dark"] .brand p,
+html[data-theme="dark"] .nav-links a {
+  color: var(--muted);
+}
+
+html[data-theme="dark"] .auth-form input,
+html[data-theme="dark"] .auth-form select,
+html[data-theme="dark"] .auth-form textarea,
+html[data-theme="dark"] .profile-form input,
+html[data-theme="dark"] .profile-form select,
+html[data-theme="dark"] .profile-form textarea {
+  background: var(--white);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+html[data-theme="dark"] .home-join-link {
+  color: var(--blue);
+}
+
+html[data-theme="dark"] .section-label,
+html[data-theme="dark"] .audience-heading p,
+html[data-theme="dark"] .audience-grid p,
+html[data-theme="dark"] .auth-heading p,
+html[data-theme="dark"] .auth-switch,
+html[data-theme="dark"] .auth-note {
+  color: var(--muted);
+}
