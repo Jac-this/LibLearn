@@ -91,7 +91,7 @@ function CourseDetails({ session: initialSession }) {
             <div className="biology-outline-list">{modules.map((module, index) => <a className="biology-outline-item" href={`/lesson?course=biology&module=${index + 1}&topic=1`} key={module.id || index}><span className="biology-outline-number">{String(index + 1).padStart(2, "0")}</span><span className="biology-outline-title"><small>MODULE {index + 1}</small>{module.title}</span><span className="biology-outline-arrow">→</span></a>)}</div>
           </section>
 
-          <section className="biology-overview-cta"><span>READY TO BEGIN?</span><h2>Start with the first lesson.</h2><p>Learn the language of life, then build from there.</p><a className="biology-start-button" href="/lesson?course=biology&module=1&topic=1">Start Course <span>→</span></a></section>
+          <section className="biology-overview-cta"><span>READY TO BEGIN?</span><h2>Start with the first module.</h2><p>Learn the language of life, then build from there.</p><a className="biology-start-button" href="/lesson?course=biology&module=1&topic=1">Start Course <span>→</span></a></section>
       </main>
     </div>
   );
