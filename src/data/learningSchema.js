@@ -70,7 +70,7 @@ const createLearningOutcomes = (lesson) => [
   `Define and use key terms related to ${lesson.title}.`,
   `Describe how the main structures, processes, or relationships in this module work.`,
   `Connect ${lesson.title} to an example from everyday life, school, agriculture, health, or the environment.`,
-  `Use biological evidence and reasoning to explain an observation related to ${lesson.title}.`,
+  `Use evidence and reasoning to explain an observation related to ${lesson.title}.`,
   `Apply the ideas in this module to a new biological situation or problem.`,
   `Evaluate a biological claim or explanation using the concepts and evidence introduced in this module.`,
 ];
