@@ -303,7 +303,7 @@ function Courses({ session: initialSession }) {
               <button
                 className="primary-button"
                 onClick={() =>
-                  openCourse(courses[0])
+                  openCourse(courses.find((course) => course.id === "digital-literacy") || courses[0])
                 }
               >
                 Start Course →
