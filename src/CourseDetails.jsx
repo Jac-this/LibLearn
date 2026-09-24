@@ -2,36 +2,6 @@ import { useEffect, useState } from "react";
 import { getSession, signOut } from "./authStore.js";
 import { getCourse } from "./data/courses.js";
 
-const otherCourses = {
-  mathematics: {
-    title: "Introduction to Mathematics",
-    category: "MATHEMATICS",
-    icon: "∑",
-    description: "Build strong foundations in numbers, algebra, equations, geometry, statistics, probability and mathematical problem solving.",
-    lessons: ["Understanding Numbers", "Basic Arithmetic", "Fractions and Decimals", "Ratios and Proportions", "Algebraic Expressions", "Linear Equations", "Inequalities", "Exponents and Powers", "Geometry", "Measurement", "Graphs and Functions", "Statistics", "Probability", "Problem Solving", "Mathematics Revision"],
-    level: "Beginner",
-    color: "navy",
-  },
-  digital: {
-    title: "Digital Literacy",
-    category: "DIGITAL SKILLS",
-    icon: "💻",
-    description: "Learn the essential digital skills needed for school, work, communication, research and everyday life.",
-    lessons: ["Introduction to Digital Literacy", "Using a Computer", "Files and Folders", "Internet and Web Browsing", "Email and Communication", "Microsoft Word and Documents", "Spreadsheets and Data", "Online Safety and Privacy", "Using AI Tools", "Digital Skills Final Review"],
-    level: "Beginner",
-    color: "gold",
-  },
-};
-
-const biologyOutcomes = [
-  "Explain what makes something living and how biology is studied.",
-  "Describe cell structures and connect each structure to its function.",
-  "Understand how cells divide and how traits are inherited.",
-  "Explain how human body systems work together to maintain health.",
-  "Apply ideas about nutrition, respiration, and reproduction to everyday life.",
-  "Explore ecosystems, evolution, and microorganisms through African and Liberian examples.",
-];
-
 function LegacyCourseDetails({ courseId, course }) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slides = [{ title: course.lessons[0], type: "concept", content: [{ heading: "Coming next", text: "This course is being developed into the same detailed slide-by-slide learning system used for Biology." }] }];
@@ -50,8 +20,8 @@ function CourseDetails({ session: initialSession }) {
   useEffect(() => { if (initialSession !== undefined) setSession(initialSession); else getSession().then(setSession).catch(() => setSession(null)); }, [initialSession]);
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get("course") || "biology";
-  const course = getCourse(courseId) || (courseId === "digital" ? getCourse("digital-literacy") : null) || otherCourses[courseId] || null;
-  const lessons = course?.lessons || [];
+  const course = getCourse(courseId === "digital" ? "digital-literacy" : courseId) || null;
+  const modules = course?.modules || [];
   const isBiology = courseId === "biology";
 
   if (!isBiology) {
@@ -82,23 +52,23 @@ function CourseDetails({ session: initialSession }) {
               <h1>Introduction to Biology</h1>
               <p className="biology-hero-description">Discover the science of life, from cells and genetics to human systems, ecosystems, evolution, and the living world around us.</p>
               <div className="biology-course-meta">
-                <span><strong>{lessons.length}</strong> Lessons</span>
+                <span><strong>{modules.length}</strong> Modules</span>
                 <span><strong>Beginner</strong> Level</span>
-                <span><strong>Certificate</strong> of Completion</span>
+                <span><strong>Guided</strong> Learning</span>
               </div>
-              <a className="biology-start-button" href="/lesson?course=biology&lesson=1">Start Course <span>→</span></a>
+              <a className="biology-start-button" href="/lesson?course=biology&module=1&topic=1">Start Course <span>→</span></a>
             </div>
             <div className="biology-hero-emblem" aria-hidden="true"><span>{course.icon}</span><small>THE SCIENCE<br />OF LIFE</small></div>
           </section>
 
           <section className="biology-overview-section biology-learn-section">
             <div className="biology-section-heading"><span>COURSE INTRODUCTION</span><h2>What you'll learn</h2><p>Build a practical foundation for understanding living systems and the biological questions that shape our world.</p></div>
-            <div className="biology-outcomes-grid">{biologyOutcomes.map((outcome, index) => <article className="biology-outcome" key={outcome}><span>{String(index + 1).padStart(2, "0")}</span><p>{outcome}</p></article>)}</div>
+            <div className="biology-outcomes-grid">{modules.flatMap((module) => module.topics?.filter((topic) => topic.type === "learning-outcomes").flatMap((topic) => topic.learningOutcomes || []) || []).slice(0, 7).map((outcome, index) => <article className="biology-outcome" key={outcome}><span>{String(index + 1).padStart(2, "0")}</span><p>{outcome}</p></article>)}</div>
           </section>
 
           <section className="biology-outline-section">
-            <div className="biology-section-heading outline-heading"><div><span>YOUR LEARNING PATH</span><h2>Course outline</h2><p>Move through the foundations of Biology one lesson at a time.</p></div><strong>{lessons.length} lessons</strong></div>
-            <div className="biology-outline-list">{lessons.map((lesson, index) => <div className="biology-outline-item" key={lesson.id || lesson.title || index}><span className="biology-outline-number">{String(index + 1).padStart(2, "0")}</span><span className="biology-outline-title"><small>LESSON {index + 1}</small>{lesson.title || lesson}</span><span className="biology-outline-arrow">→</span></div>)}</div>
+            <div className="biology-section-heading outline-heading"><div><span>YOUR LEARNING PATH</span><h2>Course outline</h2><p>Move through the foundations of Biology module by module and topic by topic.</p></div><strong>{modules.length} modules</strong></div>
+            <div className="biology-outline-list">{modules.map((module, index) => <a className="biology-outline-item" href={`/lesson?course=biology&module=${index + 1}&topic=1`} key={module.id || index}><span className="biology-outline-number">{String(index + 1).padStart(2, "0")}</span><span className="biology-outline-title"><small>MODULE {index + 1}</small>{module.title}</span><span className="biology-outline-arrow">→</span></a>)}</div>
           </section>
 
           <section className="biology-overview-cta"><span>READY TO BEGIN?</span><h2>Start with the first lesson.</h2><p>Learn the language of life, then build from there.</p><a className="biology-start-button" href="/lesson?course=biology&lesson=1">Start Course <span>→</span></a></section>
