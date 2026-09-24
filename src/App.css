@@ -4371,3 +4371,94 @@ html[data-theme="dark"] .floating-card *,
 html[data-theme="dark"] .search-box * {
   border-color: inherit;
 }
+
+
+/* DARK MODE — FINAL WHITE-SURFACE DIMMING
+   Design whites are retained structurally but reduced to near-black/dim surfaces.
+   Text inside those surfaces is explicitly given readable light tones. */
+html[data-theme="dark"] .ai-chat,
+html[data-theme="dark"] .ai-chat .chat-header,
+html[data-theme="dark"] .ai-chat .chat-body,
+html[data-theme="dark"] .ai-chat .ai-message,
+html[data-theme="dark"] .ai-chat .chat-input,
+html[data-theme="dark"] .floating-card,
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .home-join-link,
+html[data-theme="dark"] .login-btn,
+html[data-theme="dark"] .course-card,
+html[data-theme="dark"] .resource-card,
+html[data-theme="dark"] .progress-card,
+html[data-theme="dark"] .lesson,
+html[data-theme="dark"] .auth-panel,
+html[data-theme="dark"] .profile-panel,
+html[data-theme="dark"] .dashboard-panel,
+html[data-theme="dark"] .dashboard-course-card,
+html[data-theme="dark"] .dashboard-next-card {
+  background: #050608 !important;
+  color: #edf3fb !important;
+  border-color: #1b2430 !important;
+}
+
+html[data-theme="dark"] .ai-chat .chat-body {
+  background: #030405 !important;
+}
+
+html[data-theme="dark"] .ai-chat .ai-message,
+html[data-theme="dark"] .ai-chat .chat-input {
+  background: #080b10 !important;
+  color: #edf3fb !important;
+  border-color: #1b2430 !important;
+}
+
+html[data-theme="dark"] .ai-chat h1,
+html[data-theme="dark"] .ai-chat h2,
+html[data-theme="dark"] .ai-chat h3,
+html[data-theme="dark"] .ai-chat h4,
+html[data-theme="dark"] .ai-chat h5,
+html[data-theme="dark"] .ai-chat h6,
+html[data-theme="dark"] .ai-chat p,
+html[data-theme="dark"] .ai-chat span,
+html[data-theme="dark"] .ai-chat label,
+html[data-theme="dark"] .ai-chat li,
+html[data-theme="dark"] .ai-chat strong,
+html[data-theme="dark"] .ai-chat button,
+html[data-theme="dark"] .floating-card h1,
+html[data-theme="dark"] .floating-card h2,
+html[data-theme="dark"] .floating-card h3,
+html[data-theme="dark"] .floating-card p,
+html[data-theme="dark"] .floating-card span,
+html[data-theme="dark"] .search-box label,
+html[data-theme="dark"] .search-box span,
+html[data-theme="dark"] .search-box button {
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] .search-box input,
+html[data-theme="dark"] .ai-chat input,
+html[data-theme="dark"] .ai-chat textarea {
+  background: transparent !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .search-box input::placeholder,
+html[data-theme="dark"] .ai-chat input::placeholder,
+html[data-theme="dark"] .ai-chat textarea::placeholder {
+  color: #91a0b4 !important;
+}
+
+/* A white surface in the original design is approximately 2% brightness here. */
+html[data-theme="dark"] [style*="background: white"],
+html[data-theme="dark"] [style*="background:#fff"],
+html[data-theme="dark"] [style*="background: #fff"],
+html[data-theme="dark"] .white {
+  background: #050608 !important;
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] [style*="background: white"] *,
+html[data-theme="dark"] [style*="background:#fff"] *,
+html[data-theme="dark"] [style*="background: #fff"] *,
+html[data-theme="dark"] .white * {
+  color: inherit;
+}
