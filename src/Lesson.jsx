@@ -67,7 +67,7 @@ function LearningContent({ unit }) {
   );
 }
 
-function Lesson() {
+function Lesson({ session: initialSession }) {
   const params = new URLSearchParams(window.location.search);
   const course = params.get("course") || "biology";
   const lessonNumber = Math.max(1, Number(params.get("lesson")) || 1);
@@ -77,7 +77,7 @@ function Lesson() {
   const learningContent = lesson?.content || [];
 
   const [currentUnit, setCurrentUnit] = useState(0);
-  const [studentId, setStudentId] = useState(null);
+  const [studentId, setStudentId] = useState(initialSession?.id || null);
   const [completedLessons, setCompletedLessons] = useState([]);
   const [sessionLoading, setSessionLoading] = useState(true);
   const [progressLoading, setProgressLoading] = useState(true);
@@ -167,7 +167,7 @@ function Lesson() {
           <span className="brand-dot"></span>
           <span><strong>LibLearn</strong><small>Learn. Grow. Lead.</small></span>
         </a>
-        <nav><a href="/courses">Courses</a><a href="/dashboard">My learning</a></nav>
+        <nav><a href="/courses">Learn</a><a href="/dashboard">Dashboard</a><a href="/profile">Profile</a></nav>
         <ThemeControl />
       </header>
 
