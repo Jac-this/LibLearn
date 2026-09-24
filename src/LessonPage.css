@@ -403,4 +403,6 @@
   color: #cbd5e1;
   font-size: 15px;
   line-height: 1.8;
+  text-align: justify;
+  text-justify: inter-word;
 }
