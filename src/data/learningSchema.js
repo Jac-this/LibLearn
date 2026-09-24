@@ -34,7 +34,7 @@ export const createTopic = ({
   title,
   type,
   description,
-  content: Array.isArray(content) ? content.map(createLearningSection) : [],
+  content: Array.isArray(content) ? content : [],
   activities: Array.isArray(activities) ? activities : [],
   assessment: assessment || null,
   status,
