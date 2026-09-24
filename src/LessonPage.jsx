@@ -22,14 +22,9 @@ function LessonPage({
   showCertificate = true,
 }) {
   const storageKey = useMemo(() => `liblearn-module-progress:${moduleTitle || "module"}`, [moduleTitle]);
-  const [progress, setProgress] = useState(() => {
-    try {
-      const saved = Number(localStorage.getItem(storageKey));
-      return Number.isFinite(saved) && saved >= 0 ? Math.min(100, saved) : Math.max(0, Math.min(100, Number(currentProgress) || 0));
-    } catch {
-      return Math.max(0, Math.min(100, Number(currentProgress) || 0));
-    }
-  });
+  const [progress, setProgress] = useState(() =>
+    Math.max(0, Math.min(100, Number(currentProgress) || 0)),
+  );
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const safeTopics = useMemo(
@@ -38,9 +33,7 @@ function LessonPage({
   );
 
   useEffect(() => {
-    if (Number(currentProgress) > 0) {
-      setProgress(Math.max(0, Math.min(100, Number(currentProgress))));
-    }
+    setProgress(Math.max(0, Math.min(100, Number(currentProgress) || 0)));
   }, [currentProgress]);
 
   useEffect(() => {
@@ -49,9 +42,12 @@ function LessonPage({
     } catch {}
   }, [storageKey, progress]);
 
-  const nextProgress = Math.min(
-    100,
-    progress + Math.max(1, Math.round(100 / Math.max(1, Number(totalTopics) || 5))),
+  const nextTopicIndex = Math.min(
+    Number(totalTopics) || 1,
+    currentTopicIndex + 1,
+  );
+  const nextProgress = Math.round(
+    (nextTopicIndex / Math.max(1, Number(totalTopics) || 1)) * 100,
   );
 
   const previousIndex = Math.max(0, currentTopicIndex - 1);
