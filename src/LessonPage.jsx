@@ -22,6 +22,8 @@ function LessonPage({
   showCertificate = true,
 }) {
   const storageKey = useMemo(() => `liblearn-module-progress:${moduleTitle || "module"}`, [moduleTitle]);
+  const [bottomBarOpen, setBottomBarOpen] = useState(true);
+
   const [progress, setProgress] = useState(() =>
     Math.max(0, Math.min(100, Number(currentProgress) || 0)),
   );
@@ -213,7 +215,17 @@ function LessonPage({
         </main>
       </div>
 
-      <footer className="liblearn-player-bottom">
+      <footer className={`liblearn-player-bottom${bottomBarOpen ? "" : " collapsed"}`}>
+        <button
+          type="button"
+          className="liblearn-bottom-toggle"
+          onClick={() => setBottomBarOpen((open) => !open)}
+          aria-label={bottomBarOpen ? "Collapse progress bar" : "Expand progress bar"}
+          aria-expanded={bottomBarOpen}
+        >
+          <span aria-hidden="true">{bottomBarOpen ? "⌄" : "⌃"}</span>
+        </button>
+
         <div className="liblearn-bottom-progress">
           <div className="liblearn-progress-label">
             <strong>Module {moduleNumber} Progress</strong>
