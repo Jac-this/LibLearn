@@ -1,44 +1,37 @@
 import { useEffect, useState } from "react";
 import { getSession, signOut } from "./authStore.js";
 
-const courses = [
-  {
-    id: "digital-literacy",
-    title: "Digital Literacy",
-    category: "Technology",
-    level: "High School",
-    difficulty: "Beginner",
-    lessons: 12,
-    duration: "4 weeks",
-    icon: "💻",
-    description:
-      "Learn the essential digital skills you need to study, work, communicate, and navigate the modern world.",
-  },
-  {
+import { getPublishedCourses } from "./data/courses.js";
+
+const courses = Object.values({
+  mathematics: {
     id: "mathematics",
     title: "Mathematics",
     category: "Mathematics",
     level: "High School",
     difficulty: "Beginner",
-    lessons: 16,
+    lessons: 15,
     duration: "6 weeks",
     icon: "∑",
-    description:
-      "Build a strong foundation in numbers, algebra, geometry, statistics, and everyday problem solving.",
+    description: "Build a strong foundation in numbers, algebra, geometry, statistics, and everyday problem solving.",
   },
-  {
-    id: "biology",
-    title: "Biology",
-    category: "Science",
+  "digital-literacy": {
+    id: "digital-literacy",
+    title: "Digital Literacy",
+    category: "Technology",
     level: "High School",
     difficulty: "Beginner",
-    lessons: 12,
-    duration: "5 weeks",
-    icon: "🧬",
-    description:
-      "Discover living organisms, cells, genetics, human biology, ecosystems, and the science of life.",
+    lessons: 10,
+    duration: "4 weeks",
+    icon: "💻",
+    description: "Learn the essential digital skills you need to study, work, communicate, and navigate the modern world.",
   },
-];
+  ...Object.fromEntries(getPublishedCourses().map((course) => [course.id, {
+    ...course,
+    category: course.category?.replace(/_/g, " ") || "Course",
+    lessons: course.lessons?.length || 0,
+  }])),
+});
 
 const levels = [
   "All",
