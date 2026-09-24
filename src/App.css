@@ -139,3 +139,59 @@ html[data-theme="dark"] body { background:#0c1119; }
   .learning-actions-middle { order:3; width:100%; }
   .lesson-explore-bar { grid-template-columns:1fr; padding:22px 25px; }
 }
+
+/* GLOBAL THEME TOKENS */
+html[data-theme="dark"] {
+  --blue: #74a9f2;
+  --blue-dark: #5d91d7;
+  --blue-deep: #dceaff;
+  --blue-light: #172b45;
+  --blue-soft: #141e2b;
+  --gold: #efbd55;
+  --text: #edf3fb;
+  --muted: #9eacbd;
+  --white: #121a25;
+  --border: #293649;
+  --shadow: 0 15px 45px rgba(0, 0, 0, .22);
+}
+html[data-theme="dark"] body { background:#0c1119; color:var(--text); }
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .course-card,
+html[data-theme="dark"] .resource-card,
+html[data-theme="dark"] .progress-card,
+html[data-theme="dark"] .lesson,
+html[data-theme="dark"] .auth-panel,
+html[data-theme="dark"] .profile-panel,
+html[data-theme="dark"] .dashboard-summary,
+html[data-theme="dark"] .dashboard-panel,
+html[data-theme="dark"] .dashboard-course-card,
+html[data-theme="dark"] .dashboard-next-card,
+html[data-theme="dark"] .role-placeholder-card { background:#121a25; color:var(--text); border-color:var(--border); }
+html[data-theme="dark"] .hero { background:linear-gradient(120deg,#101d2e,#13243a); }
+html[data-theme="dark"] .auth-page,
+html[data-theme="dark"] .profile-page,
+html[data-theme="dark"] .dashboard-page,
+html[data-theme="dark"] .role-home-page { background:#0c1119; }
+html[data-theme="dark"] .hero h1,
+html[data-theme="dark"] .section-heading h2,
+html[data-theme="dark"] .audience-heading h2,
+html[data-theme="dark"] .learning-content h2,
+html[data-theme="dark"] .role-home-panel h1,
+html[data-theme="dark"] .role-home-intro h1,
+html[data-theme="dark"] .dashboard-welcome h1,
+html[data-theme="dark"] .dashboard-section-heading h2,
+html[data-theme="dark"] .dashboard-panel-heading h2,
+html[data-theme="dark"] .dashboard-course-title h3,
+html[data-theme="dark"] .profile-completion-banner h2,
+html[data-theme="dark"] .catalog-info h3,
+html[data-theme="dark"] .no-results h3 { color:var(--blue-deep); }
+html[data-theme="dark"] .audience-grid article,
+html[data-theme="dark"] .learning-preview,
+html[data-theme="dark"] .course-meta span,
+html[data-theme="dark"] .profile-completion-banner { background:#141e2b; border-color:var(--border); }
+html[data-theme="dark"] .auth-form input,
+html[data-theme="dark"] .profile-form input,
+html[data-theme="dark"] .profile-form select,
+html[data-theme="dark"] .profile-form textarea { background:#121a25; color:var(--text); border-color:var(--border); }
+html[data-theme="dark"] .login-btn,
+html[data-theme="dark"] .dashboard-logout { background:#121a25; color:var(--text); border-color:var(--border); }
