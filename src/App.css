@@ -4880,3 +4880,146 @@ html[data-theme="dark"] input::placeholder,
 html[data-theme="dark"] textarea::placeholder {
   color: #9eacbd !important;
 }
+
+
+/* TARGETED DARK-MODE VISIBILITY FIXES — 2026-09-24
+   Keep the existing palette. Only correct the specific light/hidden surfaces
+   and the university dashboard heading layout reported during testing. */
+
+/* Home → final "Ready to start?" call-to-action */
+html[data-theme="dark"] .cta {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .cta > div > span,
+html[data-theme="dark"] .cta h2,
+html[data-theme="dark"] .cta p {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .cta .home-join-link {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 1px solid #ffffff !important;
+}
+
+/* Dashboard → profile identity card remains white in dark mode,
+   but every piece of content inside it must remain visible. */
+html[data-theme="dark"] .dashboard-profile {
+  background: #ffffff !important;
+  color: #10213f !important;
+  border-color: #dce7f5 !important;
+}
+
+html[data-theme="dark"] .dashboard-profile strong {
+  color: #10213f !important;
+}
+
+html[data-theme="dark"] .dashboard-profile small {
+  color: #52627a !important;
+}
+
+html[data-theme="dark"] .dashboard-profile > span {
+  color: #ffffff !important;
+  background: #073b8c !important;
+}
+
+/* University/teacher dashboard intro — prevent the heading and name from
+   colliding or wrapping into the profile card. */
+html[data-theme="dark"] .role-home-intro {
+  align-items: flex-start !important;
+  gap: 40px !important;
+}
+
+html[data-theme="dark"] .role-home-intro > div:first-child {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+html[data-theme="dark"] .role-home-intro h1 {
+  max-width: 760px !important;
+  margin: 10px 0 12px !important;
+  line-height: 1.12 !important;
+  overflow-wrap: anywhere;
+}
+
+html[data-theme="dark"] .role-home-intro p,
+html[data-theme="dark"] .role-home-intro small {
+  max-width: 680px;
+}
+
+html[data-theme="dark"] .role-home-intro .dashboard-profile {
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+
+/* Courses → "Learn. Grow. Become." hero.
+   Make the dark-mode surface unmistakably dark while preserving the
+   existing blue/gold branding and readable white content. */
+html[data-theme="dark"] .courses-hero {
+  background: #000000 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .courses-hero h1,
+html[data-theme="dark"] .courses-hero-text > p:last-child {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .courses-hero h1 span {
+  color: #74a9f2 !important;
+}
+
+html[data-theme="dark"] .courses-hero .eyebrow {
+  color: #74a9f2 !important;
+}
+
+html[data-theme="dark"] .courses-hero-card {
+  background: #121a25 !important;
+  color: #ffffff !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .courses-hero-card strong {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .courses-hero-card small {
+  color: #9eacbd !important;
+}
+
+/* Courses → blue featured/CTA boxes: their small white buttons become
+   black in dark mode, with white/blue text clearly visible. */
+html[data-theme="dark"] .featured-course .primary-button,
+html[data-theme="dark"] .courses-cta .primary-button {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #293649 !important;
+}
+
+html[data-theme="dark"] .featured-course .primary-button:hover,
+html[data-theme="dark"] .courses-cta .primary-button:hover {
+  background: #121a25 !important;
+  color: #74a9f2 !important;
+}
+
+/* Keep the two blue sections themselves readable in dark mode. */
+html[data-theme="dark"] .featured-course,
+html[data-theme="dark"] .courses-cta {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .featured-content h2,
+html[data-theme="dark"] .featured-content > p:not(.eyebrow),
+html[data-theme="dark"] .featured-meta,
+html[data-theme="dark"] .courses-cta h2,
+html[data-theme="dark"] .courses-cta > p:not(.eyebrow) {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .featured-content h2 span,
+html[data-theme="dark"] .courses-cta h2 span {
+  color: #74a9f2 !important;
+}
