@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getSession, signOut } from "./authStore.js";
 import { biologyCourse } from "./data/biologyLessons.js";
 
 const otherCourses = {
@@ -44,7 +45,9 @@ function LegacyCourseDetails({ courseId, course }) {
   );
 }
 
-function CourseDetails() {
+function CourseDetails({ session: initialSession }) {
+  const [session, setSession] = useState(initialSession);
+  useEffect(() => { if (initialSession !== undefined) setSession(initialSession); else getSession().then(setSession).catch(() => setSession(null)); }, [initialSession]);
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get("course") || "biology";
   const course = courseId === "biology" ? biologyCourse : otherCourses[courseId] || biologyCourse;
@@ -64,11 +67,11 @@ function CourseDetails() {
         </div>
         <nav className="nav-links">
           <a href="/">Home</a>
-          <a href="/courses">Courses</a>
-          <a href="/#learning-room">Learning Room</a>
-          <a href="/#community">Community</a>
+          <a href="/courses">Learn</a>
+          {session && <a href="/dashboard">Dashboard</a>}
+          {session && <a href="/profile">Profile</a>}
         </nav>
-        <div className="nav-actions"><button className="login-btn">Sign in</button><button className="join-btn">Join LibLearn</button></div>
+        <div className="nav-actions">{session ? <button className="login-btn" onClick={async () => { await signOut(); window.location.href = "/"; }}>Sign out</button> : <><a className="login-btn" href="/login">Sign in</a><a className="join-btn" href="/register">Join LibLearn</a></>}</div>
       </header>
 
       <main>
