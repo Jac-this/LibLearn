@@ -143,7 +143,7 @@ const review = (questions, quiz, layout) => ({
 export const biologyLessons = [
   {
     title: "Introduction to Biology",
-    slides: [
+    content: [
       slide("What is biology?", "Biology is the scientific study of life. It investigates how living things are built, how they work, how they reproduce, and how they interact with their surroundings.", ["Biologists study molecules, cells, organisms, populations, and ecosystems."], "A farmer observing cassava growth is asking a biological question.", "Biology helps communities make decisions about health, food, wildlife, and the environment.", "definition"),
       slide("The characteristics of life", "Living organisms carry out life processes including nutrition, respiration, movement, growth, sensitivity, reproduction, excretion, and internal regulation.", ["No single characteristic alone proves that something is alive; scientists consider the complete pattern."], "A plant responds to light, grows, respires, and reproduces even though it does not walk.", "Recognising life processes helps students compare plants, animals, and microorganisms accurately.", "key-points"),
       slide("Levels of organisation", "Life can be studied from the smallest useful level to the largest: molecules, cells, tissues, organs, organ systems, organisms, populations, communities, ecosystems, and the biosphere.", ["Each level has properties that arise from interactions among its parts."], "A forest includes trees, animals, microbes, soil, water, and climate interacting as one ecosystem.", "This framework prevents us from explaining an ecosystem only by looking at one organism.", "structure"),
@@ -168,7 +168,7 @@ export const biologyLessons = [
   },
   {
     title: "Cells and Cell Structure",
-    slides: [
+    content: [
       slide("Cell theory", "Cell theory states that all living things are made of cells, the cell is the basic unit of life, and new cells come from existing cells.", ["Modern cell theory also recognises that cells contain hereditary information passed during division."], "A leaf, a bacterium, and a human all depend on cells.", "Cell theory unifies the study of organisms."),
       slide("Discovering cells", "Robert Hooke used a microscope to observe cork in 1665 and used the word cell because the compartments reminded him of small rooms. Leeuwenhoek later observed living microorganisms.", ["Early microscopes had limited resolution, but they changed biology."], "Microscopy made invisible structures available to direct observation.", "Scientific knowledge often grows when better instruments reveal new evidence."),
       slide("Microscopes and magnification", "Magnification makes an image appear larger; resolution is the ability to distinguish two close points as separate. A large image is not always a detailed image.", ["Light microscopes can view many cells; electron microscopes reveal much smaller structures."], "A school microscope may show onion cells and nuclei but not every membrane protein.", "Students must interpret microscope images using scale and limitations."),
@@ -202,7 +202,7 @@ const additionalLessons = [
     terms: "chromosome, DNA, chromatid, spindle fibre, mitosis, cytokinesis, cell cycle",
     scientists: "Walther Flemming's observations of chromosomes helped establish how nuclear material behaves during division.",
     process: "The cell cycle includes growth, DNA copying, preparation, nuclear division, and separation into daughter cells.",
-    slides: ["Why cells divide", "The cell cycle", "DNA before division", "Chromosomes", "Sister chromatids", "Mitosis overview", "Prophase", "Metaphase", "Anaphase", "Telophase", "Cytokinesis", "Plant and animal cytokinesis", "Mitosis and growth", "Mitosis and repair", "Asexual reproduction", "Meiosis overview", "Variation from meiosis", "Cell-cycle control", "Cancer and uncontrolled division", "Review and quiz"],
+    content: ["Why cells divide", "The cell cycle", "DNA before division", "Chromosomes", "Sister chromatids", "Mitosis overview", "Prophase", "Metaphase", "Anaphase", "Telophase", "Cytokinesis", "Plant and animal cytokinesis", "Mitosis and growth", "Mitosis and repair", "Asexual reproduction", "Meiosis overview", "Variation from meiosis", "Cell-cycle control", "Cancer and uncontrolled division", "Review and quiz"],
   },
   {
     title: "Genetics and Heredity",
@@ -211,7 +211,7 @@ const additionalLessons = [
     terms: "gene, allele, genotype, phenotype, dominant, recessive, mutation, DNA",
     scientists: "Gregor Mendel used pea plants to infer patterns of inheritance; Rosalind Franklin's data contributed to understanding DNA structure.",
     process: "Inheritance follows the movement and combination of alleles through reproduction, while mutation and recombination create variation.",
-    slides: ["Heredity and variation", "DNA as information", "Genes and chromosomes", "DNA structure", "Copying DNA", "From gene to protein", "Alleles", "Genotype and phenotype", "Mendel's experiments", "Dominant and recessive alleles", "Punnett squares", "Sex-linked inheritance", "Multiple alleles", "Environmental effects", "Mutations", "Variation and natural selection", "Genetic testing", "Agricultural genetics", "Ethics and misconceptions", "Review and quiz"],
+    content: ["Heredity and variation", "DNA as information", "Genes and chromosomes", "DNA structure", "Copying DNA", "From gene to protein", "Alleles", "Genotype and phenotype", "Mendel's experiments", "Dominant and recessive alleles", "Punnett squares", "Sex-linked inheritance", "Multiple alleles", "Environmental effects", "Mutations", "Variation and natural selection", "Genetic testing", "Agricultural genetics", "Ethics and misconceptions", "Review and quiz"],
   },
   {
     title: "Human Body Systems",
@@ -220,7 +220,7 @@ const additionalLessons = [
     terms: "organ, tissue, homeostasis, nervous system, circulatory system, immunity",
     scientists: "William Harvey demonstrated the circulation of blood; modern anatomy developed through careful observation and imaging.",
     process: "Systems exchange materials and signals while feedback mechanisms keep internal conditions within safe limits.",
-    slides: ["Organisation of the body", "Homeostasis", "The digestive system", "Absorption in the intestine", "The respiratory system", "Gas exchange", "The circulatory system", "The heart", "Blood vessels", "Blood components", "The immune system", "The urinary system", "The nervous system", "Reflexes", "The endocrine system", "The musculoskeletal system", "The reproductive system", "System cooperation", "Disease prevention", "Review and quiz"],
+    content: ["Organisation of the body", "Homeostasis", "The digestive system", "Absorption in the intestine", "The respiratory system", "Gas exchange", "The circulatory system", "The heart", "Blood vessels", "Blood components", "The immune system", "The urinary system", "The nervous system", "Reflexes", "The endocrine system", "The musculoskeletal system", "The reproductive system", "System cooperation", "Disease prevention", "Review and quiz"],
   },
   {
     title: "Nutrition",
@@ -229,7 +229,7 @@ const additionalLessons = [
     terms: "carbohydrate, protein, lipid, vitamin, mineral, fibre, balanced diet, deficiency",
     scientists: "Antoine Lavoisier helped establish links between food, oxygen, and energy; nutrition science later identified vitamins and deficiency diseases.",
     process: "Digestion breaks food into absorbable molecules, which cells use for energy, growth, repair, and regulation.",
-    slides: ["Why organisms need food", "Carbohydrates", "Proteins", "Lipids", "Vitamins", "Minerals", "Water and fibre", "Balanced diets", "Energy requirements", "Digestion", "Mouth and stomach", "Small intestine", "Liver and pancreas", "Absorption", "Malnutrition", "Deficiency diseases", "Food safety", "Nutrition and agriculture", "Reading health claims", "Review and quiz"],
+    content: ["Why organisms need food", "Carbohydrates", "Proteins", "Lipids", "Vitamins", "Minerals", "Water and fibre", "Balanced diets", "Energy requirements", "Digestion", "Mouth and stomach", "Small intestine", "Liver and pancreas", "Absorption", "Malnutrition", "Deficiency diseases", "Food safety", "Nutrition and agriculture", "Reading health claims", "Review and quiz"],
   },
   {
     title: "Respiration",
@@ -238,7 +238,7 @@ const additionalLessons = [
     terms: "aerobic respiration, anaerobic respiration, glucose, oxygen, ATP, fermentation",
     scientists: "Louis Pasteur studied fermentation and helped show that microorganisms can carry out processes without oxygen.",
     process: "Aerobic respiration transfers energy from glucose using oxygen; anaerobic pathways release less energy when oxygen is limited.",
-    slides: ["Energy for life", "Respiration versus breathing", "The respiration equation", "Glucose and ATP", "Mitochondria", "Aerobic respiration", "Gas exchange for respiration", "Respiration in plants", "Respiration in animals", "Exercise and oxygen", "Oxygen debt", "Anaerobic respiration in muscles", "Fermentation in yeast", "Fermentation in foods", "Temperature and enzymes", "Investigating respiration", "Respiration and agriculture", "Respiration and disease", "Misconceptions", "Review and quiz"],
+    content: ["Energy for life", "Respiration versus breathing", "The respiration equation", "Glucose and ATP", "Mitochondria", "Aerobic respiration", "Gas exchange for respiration", "Respiration in plants", "Respiration in animals", "Exercise and oxygen", "Oxygen debt", "Anaerobic respiration in muscles", "Fermentation in yeast", "Fermentation in foods", "Temperature and enzymes", "Investigating respiration", "Respiration and agriculture", "Respiration and disease", "Misconceptions", "Review and quiz"],
   },
   {
     title: "Reproduction",
@@ -247,7 +247,7 @@ const additionalLessons = [
     terms: "sexual reproduction, asexual reproduction, gamete, fertilisation, pollination, embryo",
     scientists: "Mendel's breeding work and later reproductive biology showed how offspring receive information from parents.",
     process: "Sexual reproduction combines genetic material from gametes; asexual reproduction uses one parent and usually produces genetically similar offspring.",
-    slides: ["Why organisms reproduce", "Asexual reproduction", "Sexual reproduction", "Gametes", "Fertilisation", "Variation", "Flower structure", "Pollination", "Seed formation", "Seed dispersal", "Human reproductive systems", "The menstrual cycle", "Fertilisation and implantation", "Pregnancy and development", "Birth and early life", "Puberty", "Reproductive health", "Population and conservation", "Common misconceptions", "Review and quiz"],
+    content: ["Why organisms reproduce", "Asexual reproduction", "Sexual reproduction", "Gametes", "Fertilisation", "Variation", "Flower structure", "Pollination", "Seed formation", "Seed dispersal", "Human reproductive systems", "The menstrual cycle", "Fertilisation and implantation", "Pregnancy and development", "Birth and early life", "Puberty", "Reproductive health", "Population and conservation", "Common misconceptions", "Review and quiz"],
   },
   {
     title: "Ecology",
@@ -256,7 +256,7 @@ const additionalLessons = [
     terms: "habitat, niche, population, community, ecosystem, food web, biodiversity, conservation",
     scientists: "Arthur Tansley introduced the ecosystem concept; Rachel Carson helped communicate ecological effects of human activity.",
     process: "Energy flows through food chains while matter cycles between organisms and the physical environment.",
-    slides: ["What is ecology?", "Habitats and niches", "Populations", "Communities", "Ecosystems", "Abiotic factors", "Biotic factors", "Food chains", "Food webs", "Energy transfer", "Carbon cycle", "Water cycle", "Decomposition", "Population growth", "Competition", "Predation and symbiosis", "Biodiversity", "Liberian ecosystems", "Conservation and climate", "Review and quiz"],
+    content: ["What is ecology?", "Habitats and niches", "Populations", "Communities", "Ecosystems", "Abiotic factors", "Biotic factors", "Food chains", "Food webs", "Energy transfer", "Carbon cycle", "Water cycle", "Decomposition", "Population growth", "Competition", "Predation and symbiosis", "Biodiversity", "Liberian ecosystems", "Conservation and climate", "Review and quiz"],
   },
   {
     title: "Evolution",
@@ -265,7 +265,7 @@ const additionalLessons = [
     terms: "variation, adaptation, natural selection, fitness, fossil, speciation, resistance",
     scientists: "Charles Darwin and Alfred Russel Wallace independently developed natural-selection explanations; fossils and genetics later strengthened evolutionary science.",
     process: "Heritable variation affects survival and reproduction, changing allele frequencies in populations across generations.",
-    slides: ["What evolution means", "Evidence of variation", "Inherited and acquired traits", "Natural selection", "Darwin's observations", "Wallace's contribution", "Adaptation", "Fitness", "Fossils", "Comparative anatomy", "Embryology and development", "DNA evidence", "Artificial selection", "Antibiotic resistance", "Insecticide resistance", "Speciation", "Evolution and classification", "Human evolution", "Misconceptions", "Review and quiz"],
+    content: ["What evolution means", "Evidence of variation", "Inherited and acquired traits", "Natural selection", "Darwin's observations", "Wallace's contribution", "Adaptation", "Fitness", "Fossils", "Comparative anatomy", "Embryology and development", "DNA evidence", "Artificial selection", "Antibiotic resistance", "Insecticide resistance", "Speciation", "Evolution and classification", "Human evolution", "Misconceptions", "Review and quiz"],
   },
   {
     title: "Microorganisms",
@@ -274,7 +274,7 @@ const additionalLessons = [
     terms: "bacterium, virus, fungus, protozoan, pathogen, vector, immunity, culture",
     scientists: "Antonie van Leeuwenhoek observed microorganisms; Louis Pasteur and Robert Koch developed evidence connecting microbes with disease and fermentation.",
     process: "Microbes reproduce, exchange materials, interact with hosts, and move through environments by routes such as water, air, food, and vectors.",
-    slides: ["The microscopic world", "Bacteria", "Bacterial structure", "Viruses", "Fungi", "Protozoa", "Microbial reproduction", "Useful microorganisms", "Decomposition", "Fermentation", "Pathogens", "Disease transmission", "Malaria and vectors", "Hygiene and sanitation", "Food preservation", "Antibiotics", "Resistance", "Microbes in agriculture", "Investigating microbes safely", "Review and quiz"],
+    content: ["The microscopic world", "Bacteria", "Bacterial structure", "Viruses", "Fungi", "Protozoa", "Microbial reproduction", "Useful microorganisms", "Decomposition", "Fermentation", "Pathogens", "Disease transmission", "Malaria and vectors", "Hygiene and sanitation", "Food preservation", "Antibiotics", "Resistance", "Microbes in agriculture", "Investigating microbes safely", "Review and quiz"],
   },
   {
     title: "Biology Revision",
@@ -283,13 +283,13 @@ const additionalLessons = [
     terms: "cell, gene, homeostasis, energy, reproduction, ecosystem, evolution, evidence",
     scientists: "Revision connects the work of Hooke, Leeuwenhoek, Mendel, Darwin, Franklin, Pasteur, Harvey, and many others.",
     process: "Biology links structure, function, information, energy, change, and interaction across levels of organisation.",
-    slides: ["How to revise Biology", "Cells and organisation", "Transport and exchange", "Cell division", "Genetics", "Human systems", "Nutrition", "Respiration", "Reproduction", "Ecology", "Evolution", "Microorganisms", "Scientific method", "Data and graphs", "Experimental design", "Health applications", "Agriculture applications", "Conservation applications", "Exam misconceptions", "Final review and quiz"],
+    content: ["How to revise Biology", "Cells and organisation", "Transport and exchange", "Cell division", "Genetics", "Human systems", "Nutrition", "Respiration", "Reproduction", "Ecology", "Evolution", "Microorganisms", "Scientific method", "Data and graphs", "Experimental design", "Health applications", "Agriculture applications", "Conservation applications", "Exam misconceptions", "Final review and quiz"],
   },
 ];
 
 const makeExpandedLesson = (lesson) => ({
   title: lesson.title,
-  slides: lesson.slides.map((title, index) => slide(
+  content: lesson.slides.map((title, index) => slide(
     title,
     `${title} is an important part of understanding ${lesson.focus}. Start with the definition, then connect the structure or process to what happens in a living system. This lesson uses evidence and examples so the idea can be applied rather than memorised.`,
     [
@@ -309,7 +309,7 @@ export const biologyCourse = {
   category: "SCIENCE",
   icon: "🧬",
   description: "A comprehensive introduction to the study of life, living organisms, their structures, functions, relationships, evolution and importance to society.",
-  lessons: biologyLessons.map((lesson) => lesson.title),
+  lessons: biologyLessons,
 };
 
 export const getBiologyLesson = (lessonNumber) => biologyLessons[lessonNumber - 1] || null;
