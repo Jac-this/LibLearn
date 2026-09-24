@@ -289,7 +289,7 @@ const additionalLessons = [
 
 const makeExpandedLesson = (lesson) => ({
   title: lesson.title,
-  content: lesson.slides.map((title, index) => slide(
+  content: lesson.content.map((title, index) => slide(
     title,
     `${title} is an important part of understanding ${lesson.focus}. Start with the definition, then connect the structure or process to what happens in a living system. This lesson uses evidence and examples so the idea can be applied rather than memorised.`,
     [
