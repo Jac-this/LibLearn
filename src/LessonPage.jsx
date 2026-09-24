@@ -12,6 +12,7 @@ function LessonPage({
   xp = 0,
   type = "learning-outcomes",
   onNext,
+  onPrevious,
   totalTopics = 5,
   topics = [],
   currentTopicIndex = 0,
@@ -52,6 +53,18 @@ function LessonPage({
     100,
     progress + Math.max(1, Math.round(100 / Math.max(1, Number(totalTopics) || 5))),
   );
+
+  const previousIndex = Math.max(0, currentTopicIndex - 1);
+  const previousProgress = Math.round((previousIndex / Math.max(1, Number(totalTopics) || 1)) * 100);
+
+  const handlePrevious = () => {
+    if (currentTopicIndex <= 0) return;
+    setProgress(previousProgress);
+    onPrevious?.({
+      progress: previousProgress,
+      currentTopicIndex: currentTopicIndex - 1,
+    });
+  };
 
   const handleNext = () => {
     setProgress(nextProgress);
@@ -218,6 +231,16 @@ function LessonPage({
         <div className="liblearn-learning-social">
           <span>You're learning with {Number(totalLearners).toLocaleString()} others - let's get learning.</span>
         </div>
+
+        <button
+          type="button"
+          className="liblearn-previous-button"
+          onClick={handlePrevious}
+          disabled={currentTopicIndex <= 0}
+        >
+          <span aria-hidden="true">←</span>
+          Previous
+        </button>
 
         <button type="button" className="liblearn-next-button" onClick={handleNext} disabled={progress >= 100}>
           {progress >= 100 ? "Completed" : "Next"}
