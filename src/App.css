@@ -4691,3 +4691,192 @@ html[data-theme="dark"] .study-group,
 html[data-theme="dark"] .study-group * {
   color: #000000 !important;
 }
+
+
+/* LIBLEARN — FINAL GLOBAL THEME CONTRACT
+   One stored theme controls every page. Dark mode is the default.
+   No dark surface may lose its readable content. */
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html[data-theme="default"] {
+  color-scheme: light;
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] #root {
+  background: #0c1119 !important;
+  color: #edf3fb !important;
+}
+
+html[data-theme="dark"] .app,
+html[data-theme="dark"] .courses-page,
+html[data-theme="dark"] .course-details-page,
+html[data-theme="dark"] .biology-overview,
+html[data-theme="dark"] .lesson-page,
+html[data-theme="dark"] .auth-page,
+html[data-theme="dark"] .profile-page,
+html[data-theme="dark"] .dashboard-page,
+html[data-theme="dark"] .role-home-page {
+  background: #0c1119 !important;
+  color: #edf3fb !important;
+}
+
+/* Courses library: the old page had explicit white surfaces that ignored
+   the shared theme variables. */
+html[data-theme="dark"] .courses-page .courses-header,
+html[data-theme="dark"] .course-explorer,
+html[data-theme="dark"] .category-filter,
+html[data-theme="dark"] .catalog-card,
+html[data-theme="dark"] .no-results {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .courses-page .courses-nav nav a,
+html[data-theme="dark"] .catalog-meta,
+html[data-theme="dark"] .catalog-info p,
+html[data-theme="dark"] .courses-title > span,
+html[data-theme="dark"] .filter-label {
+  color: #9eacbd !important;
+}
+
+html[data-theme="dark"] .course-search,
+html[data-theme="dark"] .course-search input {
+  background: #1a2330 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .course-search input::placeholder {
+  color: #9eacbd !important;
+}
+
+html[data-theme="dark"] .category-filter {
+  color: #c8d3e2 !important;
+}
+
+html[data-theme="dark"] .category-filter.active {
+  background: #172b45 !important;
+  color: #74a9f2 !important;
+  border-color: #3d6594 !important;
+}
+
+html[data-theme="dark"] .catalog-info h3,
+html[data-theme="dark"] .courses-title h2,
+html[data-theme="dark"] .no-results h3 {
+  color: #edf3fb !important;
+}
+
+/* All common dark cards get readable content. */
+html[data-theme="dark"] .course-card,
+html[data-theme="dark"] .resource-card,
+html[data-theme="dark"] .progress-card,
+html[data-theme="dark"] .lesson,
+html[data-theme="dark"] .learning-preview,
+html[data-theme="dark"] .role-placeholder-card,
+html[data-theme="dark"] .dashboard-summary,
+html[data-theme="dark"] .dashboard-panel,
+html[data-theme="dark"] .dashboard-course-card,
+html[data-theme="dark"] .dashboard-next-card,
+html[data-theme="dark"] .profile-panel,
+html[data-theme="dark"] .profile-option-list a,
+html[data-theme="dark"] .profile-overview-card,
+html[data-theme="dark"] .settings-choice-group button,
+html[data-theme="dark"] .role-option,
+html[data-theme="dark"] .floating-card,
+html[data-theme="dark"] .ai-chat,
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .auth-panel,
+html[data-theme="dark"] .audience-grid article,
+html[data-theme="dark"] .catalog-card {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .course-card h1,
+html[data-theme="dark"] .course-card h2,
+html[data-theme="dark"] .course-card h3,
+html[data-theme="dark"] .course-card p,
+html[data-theme="dark"] .course-card span,
+html[data-theme="dark"] .course-card strong,
+html[data-theme="dark"] .resource-card h1,
+html[data-theme="dark"] .resource-card h2,
+html[data-theme="dark"] .resource-card h3,
+html[data-theme="dark"] .resource-card p,
+html[data-theme="dark"] .resource-card span,
+html[data-theme="dark"] .resource-card strong,
+html[data-theme="dark"] .progress-card *,
+html[data-theme="dark"] .lesson *,
+html[data-theme="dark"] .learning-preview *,
+html[data-theme="dark"] .dashboard-panel *,
+html[data-theme="dark"] .dashboard-course-card *,
+html[data-theme="dark"] .dashboard-next-card *,
+html[data-theme="dark"] .profile-panel *,
+html[data-theme="dark"] .profile-option-list a *,
+html[data-theme="dark"] .profile-overview-card *,
+html[data-theme="dark"] .settings-choice-group button *,
+html[data-theme="dark"] .role-option *,
+html[data-theme="dark"] .floating-card *,
+html[data-theme="dark"] .auth-panel * {
+  color: #edf3fb !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="dark"] .course-card p,
+html[data-theme="dark"] .resource-card p,
+html[data-theme="dark"] .lesson small,
+html[data-theme="dark"] .catalog-info p,
+html[data-theme="dark"] .profile-option-list a small {
+  color: #9eacbd !important;
+}
+
+/* Remove the old accidental black-on-dark treatment from the three homepage
+   surfaces. They are dark surfaces now, so their content must remain light. */
+html[data-theme="dark"] .ai-section,
+html[data-theme="dark"] .community-card,
+html[data-theme="dark"] .study-group,
+html[data-theme="dark"] .role-home-secondary .compact-action {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .ai-section *,
+html[data-theme="dark"] .community-card *,
+html[data-theme="dark"] .study-group *,
+html[data-theme="dark"] .role-home-secondary .compact-action * {
+  color: #edf3fb !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="dark"] .ai-section .ai-examples div,
+html[data-theme="dark"] .study-group {
+  background: #172b45 !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .ai-section .primary-button,
+html[data-theme="dark"] .primary-button,
+html[data-theme="dark"] .auth-submit,
+html[data-theme="dark"] .join-btn,
+html[data-theme="dark"] .course-body button {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+  background: #1a2330 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #9eacbd !important;
+}
