@@ -162,3 +162,7 @@ for each row execute function private.handle_new_user();
 
 -- Profile role is descriptive data only. It must not be used as authorization.
 -- Authorization will use Supabase app metadata/custom claims when RBAC is added.
+
+-- Trigger functions are internal implementation details, not public API endpoints.
+revoke execute on function private.handle_new_user() from public;
+revoke execute on function private.protect_profile_role() from public;
