@@ -1,4 +1,5 @@
-const MODEL = "gpt-4o-mini";
+const MODEL = "gemini-3.8-flash";
+const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
 
 const buildSystemPrompt = ({
   courseTitle,
@@ -34,6 +35,15 @@ CURRENT LESSON CONTENT:
 ${section?.text || "No lesson text was supplied."}
 `;
 
+const toGeminiContents = (messages) =>
+  messages
+    .filter((message) => message && (message.role === "user" || message.role === "assistant"))
+    .slice(-12)
+    .map((message) => ({
+      role: message.role === "assistant" ? "model" : "user",
+      parts: [{ text: String(message.content || "").slice(0, 4000) }],
+    }));
+
 export default async (req) => {
   if (req.method !== "POST") {
     return Response.json({ error: "Method not allowed." }, { status: 405 });
@@ -54,53 +64,43 @@ export default async (req) => {
       return Response.json({ error: "A question is required." }, { status: 400 });
     }
 
-    const apiKey = Netlify.env.get("OPENAI_API_KEY");
-    const baseUrl = Netlify.env.get("OPENAI_BASE_URL");
+    const apiKey = Netlify.env.get("GEMINI_API_KEY");
 
-    if (!apiKey || !baseUrl) {
+    if (!apiKey) {
       return Response.json(
         { error: "The LibLearn AI service is not enabled on this Netlify site yet." },
         { status: 503 },
       );
     }
 
-    const safeMessages = messages
-      .filter((message) => message && (message.role === "user" || message.role === "assistant"))
-      .slice(-12)
-      .map((message) => ({
-        role: message.role,
-        content: String(message.content || "").slice(0, 4000),
-      }));
-
-    const response = await fetch(`${baseUrl}/chat/completions`, {
+    const response = await fetch(`${GEMINI_ENDPOINT}?key=${encodeURIComponent(apiKey)}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: MODEL,
-        temperature: 0.4,
-        max_tokens: 700,
-        messages: [
-          {
-            role: "system",
-            content: buildSystemPrompt({
+        systemInstruction: {
+          parts: [{
+            text: buildSystemPrompt({
               courseTitle,
               moduleTitle,
               topicTitle,
               section,
               learningOutcomes,
             }),
-          },
-          ...safeMessages,
-        ],
+          }],
+        },
+        contents: toGeminiContents(messages),
+        generationConfig: {
+          temperature: 0.4,
+          maxOutputTokens: 700,
+        },
       }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("LibLearn AI provider error:", response.status, errorText);
+      console.error("LibLearn Gemini provider error:", response.status, errorText);
       return Response.json(
         { error: "The AI assistant could not respond right now." },
         { status: 502 },
@@ -108,7 +108,10 @@ export default async (req) => {
     }
 
     const result = await response.json();
-    const answer = result?.choices?.[0]?.message?.content?.trim();
+    const answer = result?.candidates?.[0]?.content?.parts
+      ?.map((part) => part?.text || "")
+      .join("")
+      .trim();
 
     if (!answer) {
       return Response.json(
