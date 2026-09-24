@@ -92,7 +92,6 @@ export default async (req) => {
         },
         contents: toGeminiContents(messages),
         generationConfig: {
-          temperature: 0.4,
           maxOutputTokens: 700,
         },
       }),
