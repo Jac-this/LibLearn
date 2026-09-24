@@ -7,14 +7,16 @@ function Lesson() {
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get("course") || "biology";
   const moduleNumber = Math.max(1, Number(params.get("module") || params.get("lesson")) || 1);
-  const topicNumber = Math.max(1, Number(params.get("topic")) || 1);
+  const topicRef = params.get("topic") || "1";
 
   const course = getCourse(courseId);
   const module = getModule(course, moduleNumber);
-  const topic = getTopic(module, topicNumber);
+  const topic = getTopic(module, topicRef);
 
   const totalTopics = module?.topics?.length || 0;
-  const currentTopicIndex = Math.min(Math.max(topicNumber - 1, 0), Math.max(totalTopics - 1, 0));
+  const currentTopicIndex = topic
+    ? Math.max(0, module.topics.findIndex((item) => item?.id === topic.id))
+    : 0;
   const currentProgress = totalTopics
     ? Math.round((currentTopicIndex / totalTopics) * 100)
     : 0;
@@ -34,24 +36,32 @@ function Lesson() {
     );
   }
 
-  const goToTopic = (index) => {
+  const buildTopicUrl = (targetModuleNumber, targetTopic) =>
+    `/lesson?course=${encodeURIComponent(courseId)}&module=${targetModuleNumber}&topic=${encodeURIComponent(targetTopic?.id || "1")}`;
+
+  const goToTopic = (selectedTopic, index) => {
     if (index > currentTopicIndex) return;
-    window.location.href = `/lesson?course=${encodeURIComponent(courseId)}&module=${moduleNumber}&topic=${index + 1}`;
+    window.location.href = buildTopicUrl(moduleNumber, selectedTopic);
   };
 
   const goNext = ({ currentTopicIndex: nextIndex }) => {
     if (nextIndex < totalTopics) {
-      window.location.href = `/lesson?course=${encodeURIComponent(courseId)}&module=${moduleNumber}&topic=${nextIndex + 1}`;
+      window.location.href = buildTopicUrl(moduleNumber, module.topics[nextIndex]);
       return;
     }
 
     const nextModule = getModule(course, moduleNumber + 1);
     if (nextModule) {
-      window.location.href = `/lesson?course=${encodeURIComponent(courseId)}&module=${moduleNumber + 1}&topic=1`;
+      window.location.href = buildTopicUrl(moduleNumber + 1, nextModule.topics?.[0]);
       return;
     }
 
     window.location.href = `/course?course=${encodeURIComponent(courseId)}`;
+  };
+
+  const goPrevious = ({ currentTopicIndex: previousIndex }) => {
+    if (previousIndex < 0) return;
+    window.location.href = buildTopicUrl(moduleNumber, module.topics[previousIndex]);
   };
 
   return (
@@ -70,6 +80,7 @@ function Lesson() {
       totalLearners={course.totalLearners || 0}
       xp={course.xp || 0}
       onTopicSelect={goToTopic}
+      onPrevious={goPrevious}
       onNext={goNext}
     />
   );
