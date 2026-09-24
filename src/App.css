@@ -4600,3 +4600,94 @@ html[data-theme="dark"] .ai-section .ai-content *,
 html[data-theme="dark"] .community-card .study-group * {
   text-shadow: none !important;
 }
+
+
+/* DARK MODE — FINAL GLOBAL CARD CONTRAST
+   Every dark design surface gets readable light content.
+   Light-surface exceptions are defined below. */
+html[data-theme="dark"] .resource-card,
+html[data-theme="dark"] .course-card,
+html[data-theme="dark"] .progress-card,
+html[data-theme="dark"] .lesson,
+html[data-theme="dark"] .learning-preview,
+html[data-theme="dark"] .role-placeholder-card,
+html[data-theme="dark"] .dashboard-panel,
+html[data-theme="dark"] .dashboard-course-card,
+html[data-theme="dark"] .dashboard-next-card,
+html[data-theme="dark"] .profile-panel,
+html[data-theme="dark"] .profile-option-list a,
+html[data-theme="dark"] .profile-overview-card,
+html[data-theme="dark"] .settings-choice-group button,
+html[data-theme="dark"] .role-option,
+html[data-theme="dark"] .floating-card,
+html[data-theme="dark"] .ai-chat,
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .auth-panel {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border-color: #293649 !important;
+}
+
+html[data-theme="dark"] .resource-card *,
+html[data-theme="dark"] .course-card *,
+html[data-theme="dark"] .progress-card *,
+html[data-theme="dark"] .lesson *,
+html[data-theme="dark"] .learning-preview *,
+html[data-theme="dark"] .role-placeholder-card *,
+html[data-theme="dark"] .dashboard-panel *,
+html[data-theme="dark"] .dashboard-course-card *,
+html[data-theme="dark"] .dashboard-next-card *,
+html[data-theme="dark"] .profile-panel *,
+html[data-theme="dark"] .profile-option-list a *,
+html[data-theme="dark"] .profile-overview-card *,
+html[data-theme="dark"] .settings-choice-group button *,
+html[data-theme="dark"] .role-option *,
+html[data-theme="dark"] .floating-card *,
+html[data-theme="dark"] .ai-chat *,
+html[data-theme="dark"] .search-box *,
+html[data-theme="dark"] .auth-panel * {
+  color: #edf3fb !important;
+  text-shadow: none !important;
+}
+
+html[data-theme="dark"] .resource-card p,
+html[data-theme="dark"] .resource-card small,
+html[data-theme="dark"] .course-card p,
+html[data-theme="dark"] .progress-card p,
+html[data-theme="dark"] .lesson small,
+html[data-theme="dark"] .role-placeholder-card p,
+html[data-theme="dark"] .profile-option-list a small {
+  color: #9eacbd !important;
+}
+
+/* Keep controls readable inside dark cards. */
+html[data-theme="dark"] .course-body button,
+html[data-theme="dark"] .primary-button,
+html[data-theme="dark"] .auth-submit,
+html[data-theme="dark"] .join-btn {
+  color: #ffffff !important;
+}
+
+/* Icons/badges retain the existing dark palette instead of becoming black. */
+html[data-theme="dark"] .resource-icon,
+html[data-theme="dark"] .feature-list > div > span,
+html[data-theme="dark"] .lesson > span,
+html[data-theme="dark"] .course-meta span {
+  color: #74a9f2 !important;
+  background: #172b45 !important;
+}
+
+/* These three areas were intentionally made light in the previous fix.
+   Keep their black text; they are explicit light-surface exceptions. */
+html[data-theme="dark"] .role-home-secondary .compact-action,
+html[data-theme="dark"] .role-home-secondary .compact-action *,
+html[data-theme="dark"] .ai-section,
+html[data-theme="dark"] .ai-section .ai-content,
+html[data-theme="dark"] .ai-section .ai-content *,
+html[data-theme="dark"] .community-card,
+html[data-theme="dark"] .community-card-header,
+html[data-theme="dark"] .community-card-header *,
+html[data-theme="dark"] .study-group,
+html[data-theme="dark"] .study-group * {
+  color: #000000 !important;
+}
