@@ -4,25 +4,18 @@ import { getCourse, getLessonCount } from "./data/courses.js";
 import { getCourseProgress, markLessonComplete } from "./progressStore.js";
 
 function ThemeControl() {
-  const [theme, setTheme] = useState(() => localStorage.getItem("liblearn-theme") || "system");
+  const [theme, setTheme] = useState(() => localStorage.getItem("liblearn-theme") || "dark");
 
   useEffect(() => {
-    const apply = () => {
-      const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      document.documentElement.dataset.theme = theme === "system" ? (systemDark ? "dark" : "default") : theme;
-    };
-    apply();
+    document.documentElement.dataset.theme = theme === "default" ? "default" : "dark";
     localStorage.setItem("liblearn-theme", theme);
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    media.addEventListener?.("change", apply);
-    return () => media.removeEventListener?.("change", apply);
   }, [theme]);
 
   return (
     <div className="theme-control" aria-label="Theme">
-      {["default", "dark", "system"].map((option) => (
+      {["dark", "default"].map((option) => (
         <button key={option} className={theme === option ? "active" : ""} onClick={() => setTheme(option)}>
-          {option === "default" ? "Day" : option === "dark" ? "Night" : "System"}
+          {option === "default" ? "Day" : "Night"}
         </button>
       ))}
     </div>
