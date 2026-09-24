@@ -65,7 +65,7 @@ function LessonPage({
               {learningOutcomes.map((outcome, index) => (
                 <li key={typeof outcome === "string" ? outcome : index}>
                   <span className="liblearn-outcome-marker" aria-hidden="true">
-                    {index + 1}
+                    •
                   </span>
                   <span>{typeof outcome === "string" ? outcome : outcome?.text}</span>
                 </li>
@@ -205,9 +205,7 @@ function LessonPage({
         </div>
 
         <div className="liblearn-learning-social">
-          <span>You're learning with {Number(totalLearners).toLocaleString()} others</span>
-          <span className="liblearn-social-separator">·</span>
-          <span>let's get learning.</span>
+          <span>You're learning with {Number(totalLearners).toLocaleString()} others - let's get learning.</span>
         </div>
 
         <button type="button" className="liblearn-next-button" onClick={handleNext} disabled={progress >= 100}>
