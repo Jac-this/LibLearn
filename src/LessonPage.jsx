@@ -80,7 +80,7 @@ function LessonPage({
       );
     }
 
-    const content = [];
+    const content = Array.isArray(topic?.content) ? topic.content.flatMap((section) => Array.isArray(section?.content) ? section.content : []) : [];
     return (
       <section className="liblearn-topic-content">
         <h1>{topicTitle}</h1>
