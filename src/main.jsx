@@ -1,7 +1,8 @@
-import { StrictMode, Component } from "react";
+import { StrictMode, Component, lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.jsx";
+
+const LazyApp = lazy(() => import("./App.jsx"));
 
 class AppErrorBoundary extends Component {
   constructor(props) {
@@ -16,10 +17,10 @@ class AppErrorBoundary extends Component {
   render() {
     if (this.state.error) {
       return (
-        <main style={{ padding: "40px", fontFamily: "system-ui, sans-serif", color: "#17243a" }}>
+        <main style={{ padding: "40px", fontFamily: "system-ui, sans-serif", color: "#17243a", background: "#fff", minHeight: "100vh", boxSizing: "border-box" }}>
           <h1>LibLearn encountered an error</h1>
-          <p>The app started, but a runtime error prevented the page from rendering.</p>
-          <pre style={{ whiteSpace: "pre-wrap", marginTop: "20px", padding: "16px", background: "#f4f4f4", borderRadius: "8px" }}>
+          <p>The application loaded, but App.jsx failed while loading or rendering.</p>
+          <pre style={{ whiteSpace: "pre-wrap", marginTop: "20px", padding: "16px", background: "#f4f4f4", borderRadius: "8px", overflow: "auto" }}>
             {this.state.error?.stack || this.state.error?.message || String(this.state.error)}
           </pre>
         </main>
@@ -33,7 +34,9 @@ class AppErrorBoundary extends Component {
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AppErrorBoundary>
-      <App />
+      <Suspense fallback={<main style={{ padding: "40px", fontFamily: "system-ui, sans-serif" }}><h1>Loading LibLearn…</h1></main>}>
+        <LazyApp />
+      </Suspense>
     </AppErrorBoundary>
   </StrictMode>,
 );
