@@ -4222,3 +4222,69 @@ html[data-theme="dark"] .dashboard-course-card,
 html[data-theme="dark"] .dashboard-next-card {
   background: #1a2330;
 }
+
+
+/* DARK MODE: no white surfaces */
+html[data-theme="dark"] * {
+  --white: #121a25;
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] #root,
+html[data-theme="dark"] .app {
+  background: #0c1119 !important;
+}
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .home-join-link,
+html[data-theme="dark"] .login-btn,
+html[data-theme="dark"] .auth-panel,
+html[data-theme="dark"] .course-card,
+html[data-theme="dark"] .resource-card,
+html[data-theme="dark"] .progress-card,
+html[data-theme="dark"] .lesson,
+html[data-theme="dark"] .profile-panel,
+html[data-theme="dark"] .dashboard-summary,
+html[data-theme="dark"] .dashboard-panel,
+html[data-theme="dark"] .dashboard-course-card,
+html[data-theme="dark"] .dashboard-next-card,
+html[data-theme="dark"] .role-placeholder-card,
+html[data-theme="dark"] .audience-grid article,
+html[data-theme="dark"] .learning-preview,
+html[data-theme="dark"] .profile-option-list a,
+html[data-theme="dark"] .profile-overview-card,
+html[data-theme="dark"] .settings-choice-group button,
+html[data-theme="dark"] .role-option,
+html[data-theme="dark"] .floating-card,
+html[data-theme="dark"] .ai-chat,
+html[data-theme="dark"] .chat-body,
+html[data-theme="dark"] .ai-message,
+html[data-theme="dark"] .search-box,
+html[data-theme="dark"] .chat-input {
+  background: #121a25 !important;
+  color: #edf3fb;
+  border-color: #293649;
+}
+html[data-theme="dark"] .chat-body { background: #141e2b !important; }
+html[data-theme="dark"] .ai-message { background: #1a2330 !important; }
+html[data-theme="dark"] .search-box input,
+html[data-theme="dark"] .auth-form input,
+html[data-theme="dark"] .auth-form select,
+html[data-theme="dark"] .auth-form textarea,
+html[data-theme="dark"] .profile-form input,
+html[data-theme="dark"] .profile-form select,
+html[data-theme="dark"] .profile-form textarea {
+  background: #1a2330 !important;
+  color: #edf3fb !important;
+}
+html[data-theme="dark"] [style*="background: white"],
+html[data-theme="dark"] [style*="background:#fff"],
+html[data-theme="dark"] [style*="background: #fff"],
+html[data-theme="dark"] [style*="background-color: white"],
+html[data-theme="dark"] [style*="background-color:#fff"],
+html[data-theme="dark"] [style*="background-color: #fff"] {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+}
+html[data-theme="dark"] .student-avatar.small {
+  background: #121a25 !important;
+  border-color: #293649 !important;
+}
