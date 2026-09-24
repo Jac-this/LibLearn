@@ -5023,3 +5023,20 @@ html[data-theme="dark"] .featured-content h2 span,
 html[data-theme="dark"] .courses-cta h2 span {
   color: #74a9f2 !important;
 }
+
+
+/* COURSES NAV — keep the existing sign-out behavior; only restore visibility. */
+html[data-theme="dark"] .courses-page .login-btn {
+  background: #121a25 !important;
+  color: #edf3fb !important;
+  border: 1px solid #293649 !important;
+}
+
+html[data-theme="dark"] .courses-page .login-btn:hover {
+  background: #172b45 !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .courses-page .login-btn * {
+  color: #edf3fb !important;
+}
