@@ -80,13 +80,25 @@ function LessonPage({
       );
     }
 
+    const content = [];
     return (
       <section className="liblearn-topic-content">
         <h1>{topicTitle}</h1>
-        <div className="liblearn-topic-placeholder">
-          <span>LEARNING TOPIC</span>
-          <p>This topic is ready for its course-specific learning content.</p>
-        </div>
+        {content.length ? (
+          <div className="liblearn-topic-reading">
+            {content.map((item, index) => (
+              <section key={item?.heading || index}>
+                {item?.heading && <h2>{item.heading}</h2>}
+                {item?.text && <p>{item.text}</p>}
+              </section>
+            ))}
+          </div>
+        ) : (
+          <div className="liblearn-topic-placeholder">
+            <span>LEARNING TOPIC</span>
+            <p>This topic is ready for its course-specific learning content.</p>
+          </div>
+        )}
       </section>
     );
   };
