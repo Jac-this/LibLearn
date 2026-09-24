@@ -71,15 +71,15 @@ function App() {
   }, []);
 
   if (path === "/courses") {
-    return <Courses />;
+    return <Courses session={session} />;
   }
 
   if (path === "/course") {
-    return <CourseDetails />;
+    return <CourseDetails session={session} />;
   }
 
   if (path === "/lesson") {
-    return <Lesson />;
+    return <Lesson session={session} />;
   }
 
   if (path === "/login") {
