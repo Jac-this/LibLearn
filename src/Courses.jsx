@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getSession, signOut } from "./authStore.js";
 
 const courses = [
   {
@@ -65,7 +66,9 @@ const categories = [
   "Personal Development",
 ];
 
-function Courses() {
+function Courses({ session: initialSession }) {
+  const [session, setSession] = useState(initialSession);
+  useEffect(() => { if (initialSession !== undefined) setSession(initialSession); else getSession().then(setSession).catch(() => setSession(null)); }, [initialSession]);
   const [activeLevel, setActiveLevel] = useState("All");
   const [activeCategory, setActiveCategory] = useState("All");
   const [search, setSearch] = useState("");
@@ -122,23 +125,13 @@ function Courses() {
 
           <nav className="nav-links">
             <a href="/">Home</a>
-
-            <a href="/courses" className="active">
-              Courses
-            </a>
-
-            <a href="/#categories">
-              Explore
-            </a>
-
-            <a href="/#opportunities">
-              Opportunities
-            </a>
+            <a href="/courses" className="active">Learn</a>
+            {session && <a href="/dashboard">Dashboard</a>}
+            {session && <a href="/profile">Profile</a>}
           </nav>
-
-          <a className="login-btn" href="/login">
-            Log In
-          </a>
+          <div className="nav-actions">
+            {session ? <button className="login-btn" onClick={async () => { await signOut(); window.location.href = "/"; }}>Sign out</button> : <a className="login-btn" href="/login">Sign in</a>}
+          </div>
 
         </div>
       </header>
