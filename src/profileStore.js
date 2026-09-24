@@ -52,7 +52,7 @@ export async function saveProfile(profile, studentId) {
 
 function mapProfile(profile) {
   const { fullName, studentId, username, profilePicture, educationLevel, classGrade, subjects, universityYear, courseProgram } = profile;
-  return { full_name: fullName, student_id: studentId, username, profile_picture: profilePicture, education_level: educationLevel, class_grade: classGrade, subjects, university_year: universityYear, course_program: courseProgram, role: profile.role || null, institution: profile.institution, faculty: profile.faculty, department: profile.department, teaching_level: profile.teachingLevel };
+  return { full_name: fullName, student_id: studentId, username, profile_picture: profilePicture, education_level: educationLevel, class_grade: classGrade, subjects, university_year: universityYear, course_program: courseProgram, institution: profile.institution, faculty: profile.faculty, department: profile.department, teaching_level: profile.teachingLevel };
 }
 
 function mapRow(row) {
