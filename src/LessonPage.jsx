@@ -5,6 +5,7 @@ function LessonPage({
   moduleTitle,
   courseTitle = "",
   topicTitle,
+  topic = null,
   learningOutcomes = [],
   currentProgress = 0,
   totalLearners = 0,
