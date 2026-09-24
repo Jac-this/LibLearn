@@ -163,8 +163,22 @@ export const createCourse = ({
 export const getModule = (course, moduleNumber) =>
   course?.modules?.[Math.max(0, Number(moduleNumber) - 1)] || null;
 
-export const getTopic = (module, topicNumber) =>
-  module?.topics?.[Math.max(0, Number(topicNumber) - 1)] || null;
+export const getTopic = (module, topicRef) => {
+  if (!module?.topics?.length) return null;
+
+  const ref = String(topicRef ?? "").trim();
+  if (!ref) return module.topics[0] || null;
+
+  const byId = module.topics.find((topic) => String(topic?.id) === ref);
+  if (byId) return byId;
+
+  const numericIndex = Number(ref);
+  if (Number.isFinite(numericIndex) && numericIndex >= 1) {
+    return module.topics[numericIndex - 1] || null;
+  }
+
+  return null;
+};
 
 export const isTopicReady = (topic) =>
   Boolean(topic?.id && topic?.title && topic?.type);
