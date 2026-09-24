@@ -18,7 +18,15 @@ function LessonPage({
   notesCount = 0,
   showCertificate = true,
 }) {
-  const [progress, setProgress] = useState(() => Math.max(0, Math.min(100, Number(currentProgress) || 0)));
+  const storageKey = useMemo(() => `liblearn-module-progress:${moduleTitle || "module"}`, [moduleTitle]);
+  const [progress, setProgress] = useState(() => {
+    try {
+      const saved = Number(localStorage.getItem(storageKey));
+      return Number.isFinite(saved) && saved >= 0 ? Math.min(100, saved) : Math.max(0, Math.min(100, Number(currentProgress) || 0));
+    } catch {
+      return Math.max(0, Math.min(100, Number(currentProgress) || 0));
+    }
+  });
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const safeTopics = useMemo(
@@ -135,8 +143,8 @@ function LessonPage({
                     <button
                       type="button"
                       key={topic?.id || title || index}
-                      className={isCurrent ? "current" : index < currentTopicIndex ? "completed" : ""}
-                      onClick={() => onTopicSelect?.(topic, index)}
+                      className={isCurrent ? "current" : index < currentTopicIndex ? "completed" : "locked"}
+                      onClick={() => {\n                        if (index <= currentTopicIndex) onTopicSelect?.(topic, index);\n                      }}\n                      disabled={index > currentTopicIndex}
                     >
                       <span className="liblearn-topic-number">{index + 1}</span>
                       <span>
