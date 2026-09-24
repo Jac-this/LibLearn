@@ -1,243 +1,77 @@
-import { useEffect, useMemo, useState } from "react";
-import { getSession } from "./authStore.js";
-import { getCourse, getLesson, getLessonCount } from "./data/courses.js";
-import { getCourseProgress, markLessonComplete } from "./progressStore.js";
+import { useMemo } from "react";
+import { getCourse } from "./data/courses.js";
+import { getModule, getTopic } from "./data/learningSchema.js";
+import LessonPage from "./LessonPage.jsx";
 
-function ThemeControl() {
-  const [theme, setTheme] = useState(() => localStorage.getItem("liblearn-theme") || "dark");
-
-  useEffect(() => {
-    document.documentElement.dataset.theme = theme === "default" ? "default" : "dark";
-    localStorage.setItem("liblearn-theme", theme);
-  }, [theme]);
-
-  return (
-    <div className="theme-control" aria-label="Theme">
-      {["dark", "default"].map((option) => (
-        <button key={option} className={theme === option ? "active" : ""} onClick={() => setTheme(option)}>
-          {option === "default" ? "Day" : "Night"}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function ContentBlock({ item, index }) {
-  return (
-    <div className="learning-block" key={item.heading || index}>
-      <span className="learning-block-number">{String(index + 1).padStart(2, "0")}</span>
-      <div>
-        {item.heading && <h3>{item.heading}</h3>}
-        <p>{item.text}</p>
-      </div>
-    </div>
-  );
-}
-
-function LearningContent({ unit }) {
-  const items = unit?.content || [];
-  if (!items.length) return <p className="empty-content">This section is being prepared.</p>;
-  const [lead, ...rest] = items;
-  return (
-    <div className="learning-flow">
-      {lead?.text && <div className="learning-lead"><p>{lead.text}</p></div>}
-      {rest.map((item, index) => <ContentBlock item={item} index={index} key={item.heading || index} />)}
-      {unit.reviewQuestions?.length > 0 && (
-        <aside className="reflection-panel">
-          <span>THINK ABOUT IT</span>
-          <h3>Before you move on, sit with these questions.</h3>
-          <ol>{unit.reviewQuestions.map((question) => <li key={question}>{question}</li>)}</ol>
-        </aside>
-      )}
-      {unit.quiz?.length > 0 && (
-        <aside className="check-panel">
-          <span>KNOWLEDGE CHECK</span>
-          <h3>What do you remember?</h3>
-          <ol>{unit.quiz.map((question) => <li key={question}>{question}</li>)}</ol>
-        </aside>
-      )}
-    </div>
-  );
-}
-
-function Lesson({ session: initialSession }) {
+function Lesson() {
   const params = new URLSearchParams(window.location.search);
-  const course = params.get("course") || "biology";
-  const lessonNumber = Math.max(1, Number(params.get("lesson")) || 1);
-  const courseData = getCourse(course);
-  const lesson = getLesson(course, lessonNumber);
-  const totalLessons = courseData ? getLessonCount(courseData) : 0;
-  const learningContent = lesson?.content || [];
+  const courseId = params.get("course") || "biology";
+  const moduleNumber = Math.max(1, Number(params.get("module") || params.get("lesson")) || 1);
+  const topicNumber = Math.max(1, Number(params.get("topic")) || 1);
 
-  const [currentUnit, setCurrentUnit] = useState(0);
-  const [studentId, setStudentId] = useState(initialSession?.id || null);
-  const [completedLessons, setCompletedLessons] = useState([]);
-  const [sessionLoading, setSessionLoading] = useState(true);
-  const [progressLoading, setProgressLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [progressError, setProgressError] = useState("");
-  const [saveMessage, setSaveMessage] = useState("");
+  const course = getCourse(courseId);
+  const module = getModule(course, moduleNumber);
+  const topic = getTopic(module, topicNumber);
 
-  useEffect(() => {
-    let active = true;
-    getSession().then((session) => {
-      if (!active) return;
-      const id = session?.id || null;
-      setStudentId(id);
-      setSessionLoading(false);
-      if (!id) {
-        setProgressLoading(false);
-        return;
-      }
-      getCourseProgress(course, totalLessons, id).then((progress) => {
-        if (!active) return;
-        if (progress.source === "error") setProgressError(progress.error);
-        else setCompletedLessons(progress.completedLessons);
-        setProgressLoading(false);
-      }).catch(() => {
-        if (!active) return;
-        setProgressError("Progress could not be loaded. Please refresh and try again.");
-        setProgressLoading(false);
-      });
-    }).catch(() => {
-      if (!active) return;
-      setSessionLoading(false);
-      setProgressLoading(false);
-      setProgressError("Your session could not be loaded. Please sign in again.");
-    });
-    return () => { active = false; };
-  }, [course, totalLessons]);
+  const totalTopics = module?.topics?.length || 0;
+  const currentTopicIndex = Math.min(Math.max(topicNumber - 1, 0), Math.max(totalTopics - 1, 0));
+  const currentProgress = totalTopics
+    ? Math.round((currentTopicIndex / totalTopics) * 100)
+    : 0;
 
-  useEffect(() => setCurrentUnit(0), [lessonNumber, course]);
+  const topicList = useMemo(
+    () => module?.topics || [],
+    [module],
+  );
 
-  const unit = learningContent[currentUnit] || null;
-  const isCompleted = completedLessons.includes(lessonNumber);
-  const lessonProgress = learningContent.length ? Math.round(((currentUnit + 1) / learningContent.length) * 100) : 0;
-  const courseProgress = totalLessons ? Math.round((completedLessons.length / totalLessons) * 100) : 0;
-  const remaining = Math.max(learningContent.length - currentUnit - 1, 0);
-
-  const completeLesson = async () => {
-    if (sessionLoading || progressLoading || saving || !studentId) return;
-    setSaving(true);
-    setProgressError("");
-    setSaveMessage("");
-    try {
-      const result = await markLessonComplete(course, lessonNumber, studentId);
-      if (result.ok) {
-        setCompletedLessons(result.completedLessons);
-        if (result.offline) setSaveMessage("Saved locally. It has not synced to Supabase.");
-      } else {
-        setProgressError(result.error);
-      }
-    } catch {
-      setProgressError("Lesson progress could not be saved. Please try again.");
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const nextLesson = () => {
-    window.location.href = `/lesson?course=${course}&lesson=${lessonNumber + 1}`;
-  };
-
-  const moveUnit = (amount) => setCurrentUnit((value) => Math.max(0, Math.min(learningContent.length - 1, value + amount)));
-
-  const lessonLabel = useMemo(() => String(lessonNumber).padStart(2, "0"), [lessonNumber]);
-
-  if (!courseData || !lesson) {
+  if (!course || !module || !topic) {
     return (
-      <div className="lesson-page">
-        <header className="lesson-nav"><a className="lesson-brand" href="/">LibLearn</a><ThemeControl /></header>
-        <main className="lesson-empty"><span>LIBRARY</span><h1>This lesson is not available yet.</h1><p>The course structure is ready, but this lesson does not have published learning content.</p><a href="/courses">Explore courses →</a></main>
-      </div>
+      <main className="liblearn-course-player" style={{ padding: "48px" }}>
+        <h1>This learning topic is not available yet.</h1>
+        <p>The course structure exists, but this topic has not been published.</p>
+        <a href="/courses">Return to courses →</a>
+      </main>
     );
   }
 
+  const goToTopic = (index) => {
+    if (index > currentTopicIndex) return;
+    window.location.href = `/lesson?course=${encodeURIComponent(courseId)}&module=${moduleNumber}&topic=${index + 1}`;
+  };
+
+  const goNext = ({ currentTopicIndex: nextIndex }) => {
+    if (nextIndex < totalTopics) {
+      window.location.href = `/lesson?course=${encodeURIComponent(courseId)}&module=${moduleNumber}&topic=${nextIndex + 1}`;
+      return;
+    }
+
+    const nextModule = getModule(course, moduleNumber + 1);
+    if (nextModule) {
+      window.location.href = `/lesson?course=${encodeURIComponent(courseId)}&module=${moduleNumber + 1}&topic=1`;
+      return;
+    }
+
+    window.location.href = `/course?course=${encodeURIComponent(courseId)}`;
+  };
+
   return (
-    <div className="lesson-page">
-      <header className="lesson-nav">
-        <a className="lesson-brand" href="/">
-          <span className="brand-dot"></span>
-          <span><strong>LibLearn</strong><small>Learn. Grow. Lead.</small></span>
-        </a>
-        <nav><a href="/courses">Learn</a><a href="/dashboard">Dashboard</a><a href="/profile">Profile</a></nav>
-        <ThemeControl />
-      </header>
-
-      <main className="lesson-main">
-        <div className="lesson-breadcrumb">
-          <a href={`/course?course=${course}`}>← {courseData.title}</a>
-          <span>Lesson {lessonLabel} of {String(totalLessons).padStart(2, "0")}</span>
-        </div>
-
-        <section className="lesson-hero">
-          <div>
-            <span className="lesson-kicker">{courseData.category || "COURSE"} · LESSON {lessonLabel}</span>
-            <h1>{lesson.title}</h1>
-            <p>{lesson.description || "Take your time. Follow the idea, explore the details, and make the connection."}</p>
-          </div>
-          <div className="lesson-progress-card">
-            <span>COURSE PROGRESS</span>
-            <strong>{courseProgress}%</strong>
-            <div><i style={{ width: `${courseProgress}%` }}></i></div>
-            <small>{completedLessons.length} of {totalLessons} lessons complete</small>
-          </div>
-        </section>
-
-        {progressError && <p className="lesson-message error" role="alert">{progressError}</p>}
-        {saveMessage && <p className="lesson-message success" role="status">{saveMessage}</p>}
-
-        <div className="lesson-workspace">
-          <aside className="lesson-outline">
-            <div className="outline-heading"><span>THE JOURNEY</span><strong>{currentUnit + 1}/{learningContent.length}</strong></div>
-            <div className="outline-line"></div>
-            {learningContent.map((item, index) => (
-              <button key={item.title || index} className={index === currentUnit ? "current" : index < currentUnit ? "visited" : ""} onClick={() => setCurrentUnit(index)}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <div><strong>{item.title || `Section ${index + 1}`}</strong><small>{index === currentUnit ? "You are here" : index < currentUnit ? "Explored" : "Ahead"}</small></div>
-              </button>
-            ))}
-          </aside>
-
-          <article className="lesson-reading">
-            <div className="reading-topline">
-              <span>{String(currentUnit + 1).padStart(2, "0")}</span>
-              <span>{lessonProgress}% through this lesson</span>
-            </div>
-
-            <header className="reading-heading">
-              <span>CORE IDEA</span>
-              <h2>{unit?.title || "Learning section"}</h2>
-            </header>
-
-            <LearningContent unit={unit} />
-
-            <div className="learning-actions">
-              <button className="quiet-button" onClick={() => moveUnit(-1)} disabled={currentUnit === 0}>← Previous</button>
-              <div className="learning-actions-middle">
-                <span>{remaining === 0 ? "Last section" : `${remaining} section${remaining === 1 ? "" : "s"} to go`}</span>
-              </div>
-              {currentUnit < learningContent.length - 1 ? (
-                <button className="primary-learning-button" onClick={() => moveUnit(1)}>Continue exploring →</button>
-              ) : !isCompleted ? (
-                <button className="primary-learning-button" onClick={completeLesson} disabled={sessionLoading || progressLoading || saving || !studentId}>
-                  {saving ? "Saving…" : "I've finished this lesson ✓"}
-                </button>
-              ) : lessonNumber < totalLessons ? (
-                <button className="primary-learning-button" onClick={nextLesson}>Begin the next lesson →</button>
-              ) : (
-                <a className="primary-learning-button" href={`/course?course=${course}`}>Return to course →</a>
-              )}
-            </div>
-
-            <footer className="lesson-explore-bar">
-              <div><span>GO DEEPER</span><p>More context, examples, connections and explanations will live here as LibLearn becomes adaptive.</p></div>
-              <button type="button" disabled>Ask LibLearn AI <small>Coming later</small> ↗</button>
-            </footer>
-          </article>
-        </div>
-      </main>
-    </div>
+    <LessonPage
+      courseTitle={course.title}
+      moduleTitle={module.title}
+      moduleNumber={module.number}
+      topic={topic}
+      topicTitle={topic.title}
+      learningOutcomes={topic.learningOutcomes || []}
+      type={topic.type}
+      topics={topicList}
+      currentTopicIndex={currentTopicIndex}
+      currentProgress={currentProgress}
+      totalTopics={totalTopics}
+      totalLearners={course.totalLearners || 0}
+      xp={course.xp || 0}
+      onTopicSelect={goToTopic}
+      onNext={goNext}
+    />
   );
 }
 
