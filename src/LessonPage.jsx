@@ -118,7 +118,7 @@ function LessonPage({
 
           <div>
             <span>LIBLEARN COURSE</span>
-            <strong>{moduleTitle}</strong>
+            <strong>{courseTitle || moduleTitle}</strong>
           </div>
         </div>
 
