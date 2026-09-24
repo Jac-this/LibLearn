@@ -67,7 +67,7 @@ export const createLesson = ({
 
 const createLearningOutcomes = (lesson) => [
   `Explain the central ideas involved in ${lesson.focus || lesson.title}.`,
-  `Define and use key biological terms related to ${lesson.title}.`,
+  `Define and use key terms related to ${lesson.title}.`,
   `Describe how the main structures, processes, or relationships in this module work.`,
   `Connect ${lesson.title} to an example from everyday life, school, agriculture, health, or the environment.`,
   `Use biological evidence and reasoning to explain an observation related to ${lesson.title}.`,
