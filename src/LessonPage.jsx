@@ -156,7 +156,7 @@ function LessonPage({
                       type="button"
                       key={topic?.id || title || index}
                       className={isCurrent ? "current" : index < currentTopicIndex ? "completed" : "locked"}
-                      onClick={() => {\n                        if (index <= currentTopicIndex) onTopicSelect?.(topic, index);\n                      }}\n                      disabled={index > currentTopicIndex}
+                      onClick={() => { if (index <= currentTopicIndex) onTopicSelect?.(topic, index); }}\n                      disabled={index > currentTopicIndex}
                     >
                       <span className="liblearn-topic-number">{index + 1}</span>
                       <span>
