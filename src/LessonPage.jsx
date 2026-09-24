@@ -35,8 +35,16 @@ function LessonPage({
   );
 
   useEffect(() => {
-    setProgress(Math.max(0, Math.min(100, Number(currentProgress) || 0)));
+    if (Number(currentProgress) > 0) {
+      setProgress(Math.max(0, Math.min(100, Number(currentProgress))));
+    }
   }, [currentProgress]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(storageKey, String(progress));
+    } catch {}
+  }, [storageKey, progress]);
 
   const nextProgress = Math.min(
     100,
