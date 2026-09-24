@@ -3,6 +3,7 @@ import "./LessonPage.css";
 
 function LessonPage({
   moduleTitle,
+  courseTitle = "",
   topicTitle,
   learningOutcomes = [],
   currentProgress = 0,
