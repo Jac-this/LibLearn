@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import "./LessonPage.css";
+import LearningAssistant from "./LearningAssistant.jsx";
 
 function LessonPage({
   moduleTitle,
@@ -231,6 +232,14 @@ function LessonPage({
           </div>
 
           {renderTopicContent()}
+
+          <LearningAssistant
+            courseTitle={courseTitle}
+            moduleTitle={moduleTitle}
+            topicTitle={topicTitle}
+            section={topicSections[currentSectionIndex] || null}
+            learningOutcomes={learningOutcomes}
+          />
         </main>
       </div>
 
