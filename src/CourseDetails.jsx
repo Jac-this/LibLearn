@@ -26,7 +26,7 @@ function LegacyCourseDetails({ course }) {
         <p className="section-label">COURSE MODULES</p>
         <div className="course-selector-buttons">
           {modules.map((module, index) => (
-            <a key={module.id || index} href={`/lesson?course=${course.id}&module=${index + 1}&topic=1`}>
+            <a key={module.id || index} href={`/lesson?course=${encodeURIComponent(course.id)}&module=${index + 1}&topic=${encodeURIComponent(module?.topics?.[0]?.id || "1")}`}>
               {index + 1}. {module.title}
             </a>
           ))}
@@ -76,7 +76,7 @@ function CourseDetails({ session: initialSession }) {
                 <span><strong>Beginner</strong> Level</span>
                 <span><strong>Guided</strong> Learning</span>
               </div>
-              <a className="biology-start-button" href="/lesson?course=biology&module=1&topic=1">Start Course <span>→</span></a>
+              <a className="biology-start-button" href={`/lesson?course=biology&module=1&topic=${encodeURIComponent(modules[0]?.topics?.[0]?.id || "1")}`}>Start Course <span>→</span></a>
             </div>
             <div className="biology-hero-emblem" aria-hidden="true"><span>{course.icon}</span><small>THE SCIENCE<br />OF LIFE</small></div>
           </section>
@@ -88,10 +88,10 @@ function CourseDetails({ session: initialSession }) {
 
           <section className="biology-outline-section">
             <div className="biology-section-heading outline-heading"><div><span>YOUR LEARNING PATH</span><h2>Course outline</h2><p>Move through the foundations of Biology module by module and topic by topic.</p></div><strong>{modules.length} modules</strong></div>
-            <div className="biology-outline-list">{modules.map((module, index) => <a className="biology-outline-item" href={`/lesson?course=biology&module=${index + 1}&topic=1`} key={module.id || index}><span className="biology-outline-number">{String(index + 1).padStart(2, "0")}</span><span className="biology-outline-title"><small>MODULE {index + 1}</small>{module.title}</span><span className="biology-outline-arrow">→</span></a>)}</div>
+            <div className="biology-outline-list">{modules.map((module, index) => <a className="biology-outline-item" href={`/lesson?course=biology&module=${index + 1}&topic=${encodeURIComponent(module?.topics?.[0]?.id || "1")}`} key={module.id || index}><span className="biology-outline-number">{String(index + 1).padStart(2, "0")}</span><span className="biology-outline-title"><small>MODULE {index + 1}</small>{module.title}</span><span className="biology-outline-arrow">→</span></a>)}</div>
           </section>
 
-          <section className="biology-overview-cta"><span>READY TO BEGIN?</span><h2>Start with the first module.</h2><p>Learn the language of life, then build from there.</p><a className="biology-start-button" href="/lesson?course=biology&module=1&topic=1">Start Course <span>→</span></a></section>
+          <section className="biology-overview-cta"><span>READY TO BEGIN?</span><h2>Start with the first module.</h2><p>Learn the language of life, then build from there.</p><a className="biology-start-button" href={`/lesson?course=biology&module=1&topic=${encodeURIComponent(modules[0]?.topics?.[0]?.id || "1")}`}>Start Course <span>→</span></a></section>
       </main>
     </div>
   );
