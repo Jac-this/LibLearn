@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { getSession } from "./authStore.js";
-import { getCourse, getLessonCount } from "./data/courses.js";
+import { getCourse, getLesson, getLessonCount } from "./data/courses.js";
 import { getCourseProgress, markLessonComplete } from "./progressStore.js";
 
 function ThemeControl() {
@@ -65,7 +65,7 @@ function Lesson({ session: initialSession }) {
   const course = params.get("course") || "biology";
   const lessonNumber = Math.max(1, Number(params.get("lesson")) || 1);
   const courseData = getCourse(course);
-  const lesson = courseData?.getLesson(lessonNumber) || null;
+  const lesson = getLesson(course, lessonNumber);
   const totalLessons = courseData ? getLessonCount(courseData) : 0;
   const learningContent = lesson?.content || [];
 
