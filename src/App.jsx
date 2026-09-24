@@ -24,19 +24,16 @@ function ProtectedRoute({ children, session }) {
 function App() {
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("liblearn-theme") || "system";
+      const saved = localStorage.getItem("liblearn-theme") || "dark";
       const applyTheme = () => {
         const systemDark = window.matchMedia?.("(prefers-color-scheme: dark)")?.matches ?? false;
         document.documentElement.dataset.theme =
-          saved === "system" ? (systemDark ? "dark" : "default") : saved;
+          saved === "dark" ? "dark" : "default";
       };
 
       applyTheme();
 
-      const media = window.matchMedia?.("(prefers-color-scheme: dark)");
-      media?.addEventListener?.("change", applyTheme);
-
-      return () => media?.removeEventListener?.("change", applyTheme);
+      return undefined;
     } catch {
       document.documentElement.dataset.theme = "default";
     }
