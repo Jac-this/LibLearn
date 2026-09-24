@@ -23,6 +23,12 @@ function LessonPage({
 }) {
   const storageKey = useMemo(() => `liblearn-module-progress:${moduleTitle || "module"}`, [moduleTitle]);
   const [bottomBarOpen, setBottomBarOpen] = useState(true);
+  const topicSections = Array.isArray(topic?.content) ? topic.content : [];
+  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
+
+  useEffect(() => {
+    setCurrentSectionIndex(0);
+  }, [topic?.id]);
 
   const [progress, setProgress] = useState(() =>
     Math.max(0, Math.min(100, Number(currentProgress) || 0)),
@@ -56,6 +62,13 @@ function LessonPage({
   const previousProgress = Math.round((previousIndex / Math.max(1, Number(totalTopics) || 1)) * 100);
 
   const handlePrevious = () => {
+    if (topicSections.length > 0 && currentSectionIndex > 0) {
+      const previousSectionIndex = currentSectionIndex - 1;
+      setCurrentSectionIndex(previousSectionIndex);
+      setProgress(Math.round((previousSectionIndex / topicSections.length) * 100));
+      return;
+    }
+
     if (currentTopicIndex <= 0) return;
     setProgress(previousProgress);
     onPrevious?.({
@@ -65,6 +78,13 @@ function LessonPage({
   };
 
   const handleNext = () => {
+    if (topicSections.length > 0 && currentSectionIndex < topicSections.length - 1) {
+      const nextSectionIndex = currentSectionIndex + 1;
+      setCurrentSectionIndex(nextSectionIndex);
+      setProgress(Math.round((nextSectionIndex / topicSections.length) * 100));
+      return;
+    }
+
     setProgress(nextProgress);
     onNext?.({
       progress: nextProgress,
@@ -101,18 +121,16 @@ function LessonPage({
       );
     }
 
-    const content = Array.isArray(topic?.content) ? topic.content : [];
+    const currentSection = topicSections[currentSectionIndex] || null;
     return (
       <section className="liblearn-topic-content">
         <h1>{topicTitle}</h1>
-        {content.length ? (
+        {currentSection ? (
           <div className="liblearn-topic-reading">
-            {content.map((item, index) => (
-              <section key={item?.heading || index}>
-                {item?.heading && <h2>{item.heading}</h2>}
-                {item?.text && <p>{item.text}</p>}
-              </section>
-            ))}
+            <section>
+              {currentSection.heading && <h2>{currentSection.heading}</h2>}
+              {currentSection.text && <p>{currentSection.text}</p>}
+            </section>
           </div>
         ) : (
           <div className="liblearn-topic-placeholder">
@@ -165,34 +183,30 @@ function LessonPage({
               <strong>{moduleTitle}</strong>
             </div>
 
-            {safeTopics.length > 0 ? (
-              <nav className="liblearn-topic-list">
-                {safeTopics.map((topic, index) => {
-                  const title = typeof topic === "string" ? topic : topic?.title;
-                  const topicType = typeof topic === "object" ? topic?.type : undefined;
-                  const isCurrent = index === currentTopicIndex;
-
-                  return (
-                    <button
-                      type="button"
-                      key={topic?.id || title || index}
-                      className={isCurrent ? "current" : index < currentTopicIndex ? "completed" : "locked"}
-                      onClick={() => { if (index <= currentTopicIndex) onTopicSelect?.(topic, index); }}
-                      disabled={index > currentTopicIndex}
-                    >
-                      <span className="liblearn-topic-number">{index + 1}</span>
-                      <span>
-                        <strong>{title || "Topic " + (index + 1)}</strong>
-                        {topicType && <small>{topicType.replaceAll("-", " ")}</small>}
-                      </span>
-                    </button>
-                  );
-                })}
+            {topicSections.length > 0 ? (
+              <nav className="liblearn-topic-list" aria-label="Current topic subtopics">
+                {topicSections.map((section, index) => (
+                  <button
+                    type="button"
+                    key={section?.id || section?.heading || index}
+                    className={index === currentSectionIndex ? "current" : index < currentSectionIndex ? "completed" : "locked"}
+                    onClick={() => {
+                      if (index <= currentSectionIndex) setCurrentSectionIndex(index);
+                    }}
+                    disabled={index > currentSectionIndex}
+                  >
+                    <span className="liblearn-topic-number">{index + 1}</span>
+                    <span>
+                      <strong>{section?.heading || "Subtopic " + (index + 1)}</strong>
+                      <small>{index < currentSectionIndex ? "Completed" : index === currentSectionIndex ? "Current" : "Locked"}</small>
+                    </span>
+                  </button>
+                ))}
               </nav>
             ) : (
               <div className="liblearn-sidebar-placeholder">
-                <span>MODULE CONTENT</span>
-                <p>Topics will appear here as the course is published.</p>
+                <span>TOPIC CONTENT</span>
+                <p>This topic is ready for its course-specific learning content.</p>
               </div>
             )}
 
@@ -244,14 +258,14 @@ function LessonPage({
           type="button"
           className="liblearn-previous-button"
           onClick={handlePrevious}
-          disabled={currentTopicIndex <= 0}
+          disabled={currentSectionIndex <= 0 && currentTopicIndex <= 0}
         >
           <span aria-hidden="true">←</span>
           Previous
         </button>
 
-        <button type="button" className="liblearn-next-button" onClick={handleNext} disabled={progress >= 100}>
-          {progress >= 100 ? "Completed" : "Next"}
+        <button type="button" className="liblearn-next-button" onClick={handleNext} disabled={progress >= 100 && currentSectionIndex >= topicSections.length - 1}>
+          {progress >= 100 && currentSectionIndex >= topicSections.length - 1 ? "Completed" : "Next"}
           <span aria-hidden="true">→</span>
         </button>
       </footer>
